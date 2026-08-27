@@ -1,0 +1,273 @@
+@import "leaflet/dist/leaflet.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Leaflet Map Tile Filters */
+.map-tile-filter-obsidian .leaflet-tile {
+  filter: invert(100%) hue-rotate(180deg) brightness(88%) contrast(120%) saturate(75%);
+}
+
+.map-tile-filter-saffron .leaflet-tile {
+  filter: sepia(70%) saturate(160%) hue-rotate(345deg) brightness(92%) contrast(108%);
+}
+
+.map-tile-filter-emerald .leaflet-tile {
+  filter: hue-rotate(85deg) saturate(140%) brightness(95%) contrast(110%);
+}
+
+.map-tile-filter-natural .leaflet-tile {
+  filter: contrast(105%) brightness(98%);
+}
+
+/* Custom Marker Pulse */
+@keyframes markerPulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(240, 147, 43, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 12px rgba(240, 147, 43, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(240, 147, 43, 0);
+  }
+}
+
+.custom-marker-pulse {
+  animation: markerPulse 2.4s infinite cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.leaflet-popup-content-wrapper {
+  background: #091a18 !important;
+  color: #fff !important;
+  border: 1px solid rgba(240, 147, 43, 0.4) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.6) !important;
+  padding: 4px !important;
+}
+
+.leaflet-popup-tip {
+  background: #091a18 !important;
+  border: 1px solid rgba(240, 147, 43, 0.4) !important;
+}
+
+@font-face {
+  font-family: 'Kong Quest';
+  src: url('/fonts/KongQuest-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Airstream NF';
+  src: url('/fonts/AirstreamNF.ttf') format('truetype'),
+       url('/fonts/AIRSTREA.TTF') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dustismo Roman';
+  src: url('/fonts/Dustismo_Roman_Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica_Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Don Graffiti';
+  src: url('/fonts/DonGraffiti.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Raustila';
+  src: url('/fonts/raustila-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Engebrechtre';
+  src: url('/fonts/Engebrechtre-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Engebrechtre';
+  src: url('/fonts/Engebrechtre-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  body {
+    background-color: #FBF3E3;
+    color: #1c1917;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #F0932B;
+    color: #ffffff;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #152F26;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2E7D7B;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #F0932B;
+}
+
+/* Glassmorphism helpers */
+.glass-nav {
+  background: rgba(27, 58, 47, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.glass-dark {
+  background: rgba(21, 47, 38, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Liquid Glass Effect */
+.liquid-glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.75) 45%, rgba(255, 255, 255, 0.88) 100%);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 
+    0 24px 60px -12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+    0 2px 10px rgba(255, 255, 255, 0.8) inset,
+    0 -2px 10px rgba(240, 147, 43, 0.25) inset;
+}
+
+.liquid-glass-peek {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.1) 100%);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+/* Glassmorphic button effects */
+.glass-btn-primary {
+  background: rgba(240, 147, 43, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(240, 147, 43, 0.37), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.glass-btn-secondary {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+/* Subtle glow animation */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(240, 147, 43, 0.35), 0 0 40px rgba(240, 147, 43, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(240, 147, 43, 0.65), 0 0 70px rgba(240, 147, 43, 0.35);
+  }
+}
+
+.animate-glow {
+  animation: glowPulse 2.8s infinite ease-in-out;
+}
+
+.font-kongquest {
+  font-family: 'Kong Quest', 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-airstream {
+  font-family: 'Airstream NF', 'Airstream', cursive, sans-serif;
+}
+
+.font-dustismo {
+  font-family: 'Dustismo Roman', Georgia, serif;
+}
+
+.font-coolvetica {
+  font-family: 'Coolvetica', 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-dongraffiti {
+  font-family: 'Don Graffiti', 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-allura {
+  font-family: 'Allura', cursive;
+}
+
+.font-raustila {
+  font-family: 'Raustila', cursive;
+}
+
+.font-engebrechtre {
+  font-family: 'Engebrechtre', 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-mrbedfort {
+  font-family: 'Mr Bedfort', cursive;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
