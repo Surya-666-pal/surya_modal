@@ -398,15 +398,26 @@ I searched for the most famous places near ${finalSlots.start_city} and separate
     try {
       // Node 2 (Conversational): Chat response node
       setCurrentWorkflowNode('chat');
-      const reply = await sendChatToGemini(chatHistoryRef.current, trimmedText);
-      setChatHistory([...updatedHistory, { role: 'model', text: reply }]);
+      const response = await sendChatToGemini(chatHistoryRef.current, trimmedText);
+      const replyText = response.reply || response;
+      const responseType = response.type || 'chat';
+      const staysData = response.data || [];
+
+      setChatHistory([...updatedHistory, { role: 'model', text: replyText }]);
       setMessages(prev => [
         ...prev,
-        { id: `ai-${Date.now()}`, sender: 'ai', text: reply, timestamp: nowStr }
+        { 
+          id: `ai-${Date.now()}`, 
+          sender: 'ai', 
+          text: replyText, 
+          timestamp: nowStr,
+          type: responseType,
+          stays: staysData
+        }
       ]);
       
       // Speak response out loud
-      speakResponse(reply);
+      speakResponse(replyText);
     } catch (err) {
       console.error("Gemini chat error:", err);
       const errMsg = "I'm having trouble connecting to the AI right now. Please check your network and try again.";
@@ -582,6 +593,187 @@ I searched for the most famous places near ${finalSlots.start_city} and separate
                 : <FormattedMessage text={m.text} />
               }
             </div>
+
+            {/* Stay Comparison Cards Grid */}
+            {m.sender === 'ai' && m.type === 'stay_comparison' && m.stays && m.stays.length > 0 && (
+              <motion.div 
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: { transition: { staggerChildren: 0.08 } }
+                }}
+                className="mt-3 w-full grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[90%] sm:max-w-[80%]"
+              >
+                {m.stays.map((stay, stayIdx) => (
+                  <motion.a
+                    href={stay.link || "https://www.booking.com"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    key={stayIdx}
+                    variants={{
+                      hidden: { opacity: 0, y: 10 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4 hover:border-saffron hover:shadow-md transition-all flex flex-col justify-between cursor-pointer group"
+                  >
+                    <div>
+                      <div className="flex justify-between items-start gap-2 mb-2">
+                        <span className="text-[9px] font-extrabold uppercase tracking-wider text-saffron bg-saffron/10 px-2 py-0.5 rounded-full">
+                          {stay.source}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          {stay.sharing && (
+                            <span className="text-[9px] font-extrabold text-stone-500 bg-stone-100 px-2 py-0.5 rounded-full">
+                              {stay.sharing}-Sharing
+                            </span>
+                          )}
+                          <div className="flex items-center gap-0.5 text-[11px] font-bold text-amber-500">
+                            <span>★</span>
+                            <span>{stay.rating}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <h4 className="font-serif font-black text-stone-900 text-sm sm:text-base leading-tight group-hover:text-saffron transition-colors">
+                        {stay.name}
+                      </h4>
+                      <p className="text-[10px] text-stone-400 font-semibold mt-0.5">
+                        📍 {stay.destination}
+                      </p>
+                    </div>
+
+                    <div className="flex justify-between items-baseline mt-4 pt-3 border-t border-stone-100">
+                      <span className="text-[9px] text-stone-400 font-bold uppercase tracking-wider">
+                        {stay.price_per_person ? "Per Person / Night" : "Nightly Price"}
+                      </span>
+                      <div className="text-right">
+                        <span className="font-serif font-black text-sm text-forest-900">
+                          ₹{(stay.price_per_person || stay.price_per_night).toLocaleString('en-IN')}
+                        </span>
+                        {stay.price_per_person && (
+                          <span className="text-[9px] text-stone-400 block font-semibold">
+                            Total: ₹{stay.price_per_night.toLocaleString('en-IN')}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </motion.a>
+                ))}
+              </motion.div>
+            )}
+
+            {/* Restaurant Recommendation Cards Grid */}
+            {m.sender === 'ai' && m.type === 'restaurant_recommendation' && m.data && m.data.length > 0 && (
+              <motion.div 
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: { transition: { staggerChildren: 0.08 } }
+                }}
+                className="mt-3 w-full grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[90%] sm:max-w-[80%]"
+              >
+                {m.data.map((restaurant, rIdx) => (
+                  <motion.div
+                    key={rIdx}
+                    variants={{
+                      hidden: { opacity: 0, y: 10 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
+                    className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4 hover:border-saffron hover:shadow-md transition-all flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex justify-between items-start gap-2 mb-2">
+                        <span className="text-[9px] font-extrabold uppercase tracking-wider text-forest-900 bg-forest-50 px-2 py-0.5 rounded-full border border-forest-100">
+                          🍽 {restaurant.cuisine}
+                        </span>
+                        <div className="flex items-center gap-0.5 text-[11px] font-bold text-amber-500">
+                          <span>★</span>
+                          <span>{restaurant.rating}</span>
+                        </div>
+                      </div>
+                      <h4 className="font-serif font-black text-stone-900 text-sm sm:text-base leading-tight">
+                        {restaurant.name}
+                      </h4>
+                      <p className="text-[10px] text-stone-500 font-semibold mt-1">
+                        ✨ Specialty: <span className="text-saffron">{restaurant.specialty}</span>
+                      </p>
+                      <p className="text-[10px] text-stone-400 mt-2 flex items-start gap-1">
+                        <span>📍</span>
+                        <span className="font-medium leading-normal">{restaurant.address}</span>
+                      </p>
+                    </div>
+
+                    <div className="flex justify-between items-baseline mt-4 pt-3 border-t border-stone-100">
+                      <span className="text-[9px] text-stone-400 font-bold uppercase tracking-wider">
+                        Price Range
+                      </span>
+                      <span className="font-sans font-bold text-xs text-stone-750">
+                        {restaurant.price_range}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+
+            {/* Specific Place Info Display */}
+            {m.sender === 'ai' && m.type === 'place_info' && m.data && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mt-3 w-full max-w-[90%] sm:max-w-[80%] bg-forest-900 text-white rounded-3xl p-5 border border-forest-800 shadow-lg space-y-4"
+              >
+                <div>
+                  <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-saffron/20 border border-saffron/30 text-saffron font-bold text-[9px] uppercase tracking-wider mb-2">
+                    📍 Landmark Spotlight
+                  </div>
+                  <h4 className="font-serif text-lg font-black text-white leading-tight">
+                    {m.data.name}
+                  </h4>
+                  <p className="text-[10px] text-stone-300 mt-0.5">
+                    Destination: {m.data.destination}
+                  </p>
+                </div>
+
+                <p className="text-xs text-stone-200 leading-relaxed font-sans font-medium">
+                  {m.data.description}
+                </p>
+
+                <div className="grid grid-cols-2 gap-3 pt-3 border-t border-forest-800 text-[11px]">
+                  <div>
+                    <span className="block text-stone-400 font-bold uppercase tracking-wider text-[9px]">
+                      Timings
+                    </span>
+                    <span className="font-medium text-stone-100">{m.data.timings}</span>
+                  </div>
+                  <div>
+                    <span className="block text-stone-400 font-bold uppercase tracking-wider text-[9px]">
+                      Entry Fee
+                    </span>
+                    <span className="font-medium text-stone-100">{m.data.entry_fee}</span>
+                  </div>
+                </div>
+
+                {m.data.tips && (
+                  <div className="bg-forest-850 border border-forest-800 p-3 rounded-2xl mt-2">
+                    <span className="text-[9px] font-bold text-saffron uppercase tracking-wider block mb-1">
+                      💡 Pro Travel Tip
+                    </span>
+                    <p className="text-xs text-stone-200 font-medium leading-relaxed">
+                      {m.data.tips}
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* Itinerary Cards Display */}
+            {m.sender === 'ai' && m.type === 'itinerary' && m.itineraryData && (
+              <div className="w-full max-w-[90%] sm:max-w-[80%]">
+                <ItineraryDisplay itineraryData={m.itineraryData} />
+              </div>
+            )}
           </motion.div>
         ))}
 
@@ -597,20 +789,42 @@ I searched for the most famous places near ${finalSlots.start_city} and separate
               <div className="w-8 h-8 rounded-full bg-forest-900 flex items-center justify-center shadow shrink-0 mt-1">
                 <Bot className="w-4 h-4 text-saffron" />
               </div>
-              <div className="bg-white border border-stone-200 p-4 rounded-2xl rounded-tl-sm shadow-sm flex flex-col gap-3 flex-grow">
-                <div className="flex items-center gap-2 border-b border-stone-100 pb-2">
-                  <RefreshCw className="w-3.5 h-3.5 text-saffron animate-spin shrink-0" />
-                  <span className="text-[10px] font-bold text-stone-800 uppercase tracking-wider font-mono">
-                    n8n Workflow Execution
-                  </span>
+              <div className="bg-white border border-stone-200 p-4 rounded-2xl rounded-tl-sm shadow-sm flex flex-col gap-3.5 flex-grow">
+                <div className="flex items-center gap-3 border-b border-stone-100 pb-2">
+                  <div className="relative w-6 h-6 flex items-center justify-center shrink-0">
+                    <svg className="w-full h-full text-saffron animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animationDuration: '2.5s' }}>
+                      <circle cx="12" cy="12" r="9" strokeDasharray="4 4" className="opacity-35" />
+                      <circle cx="12" cy="12" r="5" strokeDasharray="2 2" className="opacity-70" />
+                      <path d="M12 3a9 9 0 0 1 9 9" strokeLinecap="round" />
+                    </svg>
+                    <span className="absolute w-1.5 h-1.5 rounded-full bg-saffron animate-ping" />
+                  </div>
+                  <div className="flex-grow min-w-0">
+                    <span className="text-[10px] font-black text-stone-850 uppercase tracking-widest font-mono block leading-none mb-0.5">
+                      AI Architect Processing
+                    </span>
+                    <span className="text-[9px] font-bold text-stone-400 font-mono block animate-pulse">
+                      Analyzing parameters & resolving routes...
+                    </span>
+                  </div>
+                </div>
+
+                {/* Visual loading bar */}
+                <div className="w-full h-1 bg-stone-100 rounded-full overflow-hidden relative shrink-0">
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-saffron to-amber-500 rounded-full absolute"
+                    initial={{ left: '-50%', width: '40%' }}
+                    animate={{ left: '110%' }}
+                    transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
+                  />
                 </div>
                 
                 {/* Node Status Pipeline */}
                 <div className="space-y-2 font-mono text-[10px] sm:text-xs">
                   <div className="flex items-center gap-2">
                     <span className={`w-2 h-2 rounded-full shrink-0 ${currentWorkflowNode === 'extraction' ? 'bg-amber-500 animate-pulse shadow-saffron-glow' : 'bg-emerald-500'}`} />
-                    <span className={currentWorkflowNode === 'extraction' ? 'text-forest-900 font-bold' : 'text-stone-400'}>
-                      [Node 1: SlotExtractor] → Extracting params
+                    <span className={currentWorkflowNode === 'extraction' ? 'text-forest-900 font-bold animate-pulse' : 'text-stone-400'}>
+                      [Node 1: SlotExtractor] → Analyzing traveler data
                     </span>
                   </div>
                   
@@ -621,8 +835,8 @@ I searched for the most famous places near ${finalSlots.start_city} and separate
                           currentWorkflowNode === 'fetching' ? 'bg-amber-500 animate-pulse shadow-saffron-glow' : 
                           ['routing', 'narrative'].includes(currentWorkflowNode) ? 'bg-emerald-500' : 'bg-stone-200'
                         }`} />
-                        <span className={currentWorkflowNode === 'fetching' ? 'text-forest-900 font-bold' : 'text-stone-400'}>
-                          [Node 2: PlacesFetcher] → Retrieving landmark spots
+                        <span className={currentWorkflowNode === 'fetching' ? 'text-forest-900 font-bold animate-pulse' : 'text-stone-400'}>
+                          [Node 2: PlacesFetcher] → Compiling local landmarks
                         </span>
                       </div>
                       
@@ -631,8 +845,8 @@ I searched for the most famous places near ${finalSlots.start_city} and separate
                           currentWorkflowNode === 'routing' ? 'bg-amber-500 animate-pulse shadow-saffron-glow' : 
                           currentWorkflowNode === 'narrative' ? 'bg-emerald-500' : 'bg-stone-200'
                         }`} />
-                        <span className={currentWorkflowNode === 'routing' ? 'text-forest-900 font-bold' : 'text-stone-400'}>
-                          [Node 3: RouteOptimizer] → Geo-clustering & OSRM
+                        <span className={currentWorkflowNode === 'routing' ? 'text-forest-900 font-bold animate-pulse' : 'text-stone-400'}>
+                          [Node 3: RouteOptimizer] → Formatting road maps & OSRM
                         </span>
                       </div>
                       
@@ -640,8 +854,8 @@ I searched for the most famous places near ${finalSlots.start_city} and separate
                         <span className={`w-2 h-2 rounded-full shrink-0 ${
                           currentWorkflowNode === 'narrative' ? 'bg-amber-500 animate-pulse shadow-saffron-glow' : 'bg-stone-200'
                         }`} />
-                        <span className={currentWorkflowNode === 'narrative' ? 'text-forest-900 font-bold' : 'text-stone-400'}>
-                          [Node 4: NarrativeWriter] → Writing cultural legends
+                        <span className={currentWorkflowNode === 'narrative' ? 'text-forest-900 font-bold animate-pulse' : 'text-stone-400'}>
+                          [Node 4: NarrativeWriter] → Formulating best travel approach
                         </span>
                       </div>
                     </>
@@ -650,8 +864,8 @@ I searched for the most famous places near ${finalSlots.start_city} and separate
                   {currentWorkflowNode === 'chat' && (
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shrink-0" />
-                      <span className="text-forest-900 font-bold">
-                        [Node 2: GeminiChat] → Generating response
+                      <span className="text-forest-900 font-bold animate-pulse">
+                        [Node 2: GeminiChat] → Finalizing response
                       </span>
                     </div>
                   )}

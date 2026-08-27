@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Landmark, Globe2, ShieldAlert, WifiOff } from 'lucide-react';
+import { Landmark, Globe2, ShieldAlert, Sparkles } from 'lucide-react';
 
 function Counter({ targetValue, prefix = "", suffix = "", duration = 2 }) {
   const [count, setCount] = useState(0);
@@ -74,13 +74,13 @@ export default function StatsStrip() {
       bgColor: "bg-rose-500/20"
     },
     {
-      icon: WifiOff,
-      number: 100,
-      suffix: "%",
-      label: "Offline-Ready",
-      subtext: "Zero-data guides & maps",
+      icon: Sparkles,
+      specialValue: "Tour Guide",
+      label: "Gemini AI",
+      subtext: "",
       color: "text-saffron",
-      bgColor: "bg-saffron/20"
+      bgColor: "bg-saffron/20",
+      hasPulse: true
     },
   ];
 
@@ -102,8 +102,16 @@ export default function StatsStrip() {
                 transition={{ duration: 0.6, delay: idx * 0.12 }}
                 className={`flex items-center gap-4 pt-4 sm:pt-0 ${idx !== 0 ? 'sm:pl-6 lg:pl-8' : ''}`}
               >
-                <div className={`p-3 rounded-2xl ${stat.bgColor} border border-white/20 flex-shrink-0 flex items-center justify-center shadow-md backdrop-blur-md`}>
-                  <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${stat.color}`} />
+                <div className="relative flex-shrink-0">
+                  <div className={`p-3 rounded-2xl ${stat.bgColor} border border-white/20 flex items-center justify-center shadow-md backdrop-blur-md relative z-10`}>
+                    <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${stat.color}`} />
+                  </div>
+                  {stat.hasPulse && (
+                    <>
+                      <div className="absolute inset-0 rounded-2xl bg-saffron/40 animate-ping opacity-60 pointer-events-none scale-105" />
+                      <div className="absolute -inset-1 rounded-[18px] border border-saffron/30 animate-pulse pointer-events-none" />
+                    </>
+                  )}
                 </div>
                 <div>
                   <div className="text-2xl sm:text-3xl lg:text-4xl text-white tracking-tight leading-none mb-1 drop-shadow-sm">

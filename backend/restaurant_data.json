@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Laxmi Mishthan Bhandar (LMB)",
+    "destination": "Jaipur",
+    "cuisine": "Rajasthani Traditional Thali & Sweets",
+    "price_range": "₹300 - ₹800 per person",
+    "rating": 4.5,
+    "specialty": "Pyaaz Kachori & Rajasthani Thali",
+    "address": "Johari Bazar, Pink City, Jaipur"
+  },
+  {
+    "name": "Chokhi Dhani",
+    "destination": "Jaipur",
+    "cuisine": "Traditional Rajasthani Cultural Buffet",
+    "price_range": "₹900 - ₹1200 per person",
+    "rating": 4.7,
+    "specialty": "Dal Baati Churma & Folk Dance Experience",
+    "address": "12 Mile, Tonk Road, Jaipur"
+  },
+  {
+    "name": "Tapri The Tea House",
+    "destination": "Jaipur",
+    "cuisine": "Café & Fusion Snacks",
+    "price_range": "₹150 - ₹400 per person",
+    "rating": 4.6,
+    "specialty": "Masala Chai & Bun Muska",
+    "address": "C-Scheme, Jaipur"
+  },
+  {
+    "name": "Kashi Chat Bhandar",
+    "destination": "Varanasi",
+    "cuisine": "Varanasi Street Food & Chaat",
+    "price_range": "₹50 - ₹150 per person",
+    "rating": 4.8,
+    "specialty": "Tamatar Chaat, Dahi Bhalla & Lassi",
+    "address": "Godowlia Crossing, Varanasi"
+  },
+  {
+    "name": "Pizzeria Vatika Cafe",
+    "destination": "Varanasi",
+    "cuisine": "Italian & Wood-fired Pizza",
+    "price_range": "₹200 - ₹500 per person",
+    "rating": 4.5,
+    "specialty": "Apple Pie & Wood-Fired Margherita Pizza",
+    "address": "Assi Ghat, Varanasi"
+  },
+  {
+    "name": "Britto's Beach Shack",
+    "destination": "Goa",
+    "cuisine": "Goan Seafood & Continental",
+    "price_range": "₹400 - ₹1000 per person",
+    "rating": 4.4,
+    "specialty": "Prawn Curry Rice & Calamari Butter Garlic",
+    "address": "Baga Beach, North Goa"
+  },
+  {
+    "name": "Saravana Bhavan Kochi",
+    "destination": "Kerala",
+    "cuisine": "South Indian Vegetarian",
+    "price_range": "₹100 - ₹300 per person",
+    "rating": 4.5,
+    "specialty": "Masala Dosa & Filter Coffee",
+    "address": "MG Road, Ernakulam, Kochi"
+  },
+  {
+    "name": "The Tibetan Kitchen Leh",
+    "destination": "Ladakh",
+    "cuisine": "Tibetan & Ladakhi Cuisine",
+    "price_range": "₹200 - ₹600 per person",
+    "rating": 4.7,
+    "specialty": "Mothuk momo soup, Thukpa & Butter Tea",
+    "address": "Fort Road, Leh"
+  }
+]

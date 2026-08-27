@@ -94,56 +94,8 @@ export default function Navbar({ onOpenPlannerModal }) {
             })}
           </div>
 
-          {/* Right Action Pill: Language Toggle + Profile + CTA */}
+          {/* Right Action Pill: Profile + CTA */}
           <div className="hidden lg:flex items-center gap-3">
-            {/* Language Selector */}
-            <div className="relative">
-              <button
-                onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-stone-200 text-xs font-medium backdrop-blur-md transition-all duration-200 cursor-pointer"
-              >
-                <Globe className="w-3.5 h-3.5 text-saffron" />
-                <span>{selectedLang.code}</span>
-                <span className="text-white/60">|</span>
-                <span className="text-white/90 text-[11px]">{selectedLang.native}</span>
-                <ChevronDown className={`w-3 h-3 text-stone-300 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              <AnimatePresence>
-                {isLangOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-2 w-48 rounded-2xl bg-forest-900/98 border border-forest-700 shadow-2xl backdrop-blur-xl p-2 z-50 text-stone-200"
-                  >
-                    <div className="text-[11px] font-semibold text-stone-400 px-3 py-1.5 uppercase tracking-wider">
-                      Select Language (15+)
-                    </div>
-                    <div className="max-h-56 overflow-y-auto space-y-1">
-                      {languages.map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => {
-                            setSelectedLang(lang);
-                            setIsLangOpen(false);
-                          }}
-                          className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl transition-all ${
-                            selectedLang.code === lang.code
-                              ? 'bg-saffron text-white font-semibold'
-                              : 'hover:bg-white/10 text-stone-300'
-                          }`}
-                        >
-                          <span>{lang.name} ({lang.native})</span>
-                          {selectedLang.code === lang.code && <Check className="w-3.5 h-3.5" />}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
 
             {/* Profile Link */}
             <Link
@@ -170,13 +122,6 @@ export default function Navbar({ onOpenPlannerModal }) {
 
           {/* Mobile Hamburger Menu Button */}
           <div className="flex xl:hidden items-center gap-2">
-            <button
-              onClick={() => setIsLangOpen(!isLangOpen)}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/15 border border-white/20 text-stone-200 text-xs"
-            >
-              <Globe className="w-3 h-3 text-saffron" />
-              <span>{selectedLang.code}</span>
-            </button>
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

@@ -1,0 +1,146 @@
+[
+  {
+    "name": "Zostel Jaipur",
+    "destination": "Jaipur",
+    "source": "Booking.com",
+    "price_per_night": 1200,
+    "rating": 4.6,
+    "link": "https://www.booking.com"
+  },
+  {
+    "name": "Umaid Bhawan Hotel",
+    "destination": "Jaipur",
+    "source": "MakeMyTrip",
+    "price_per_night": 4500,
+    "rating": 4.7,
+    "link": "https://www.makemytrip.com"
+  },
+  {
+    "name": "The Oberoi Rajvilas",
+    "destination": "Jaipur",
+    "source": "Booking.com",
+    "price_per_night": 28000,
+    "rating": 4.9,
+    "link": "https://www.booking.com"
+  },
+  {
+    "name": "Radisson Blu Jaipur",
+    "destination": "Jaipur",
+    "source": "OYO",
+    "price_per_night": 6500,
+    "rating": 4.4,
+    "link": "https://www.oyorooms.com"
+  },
+  {
+    "name": "Pearl Palace Heritage Hotel",
+    "destination": "Jaipur",
+    "source": "MakeMyTrip",
+    "price_per_night": 3200,
+    "rating": 4.8,
+    "link": "https://www.makemytrip.com"
+  },
+  {
+    "name": "Ganpati Guest House",
+    "destination": "Varanasi",
+    "source": "Booking.com",
+    "price_per_night": 1800,
+    "rating": 4.5,
+    "link": "https://www.booking.com"
+  },
+  {
+    "name": "Brijrama Palace Heritage Hotel",
+    "destination": "Varanasi",
+    "source": "MakeMyTrip",
+    "price_per_night": 18000,
+    "rating": 4.8,
+    "link": "https://www.makemytrip.com"
+  },
+  {
+    "name": "Taj Nadesar Palace",
+    "destination": "Varanasi",
+    "source": "Booking.com",
+    "price_per_night": 32000,
+    "rating": 4.9,
+    "link": "https://www.booking.com"
+  },
+  {
+    "name": "Zostel Varanasi",
+    "destination": "Varanasi",
+    "source": "OYO",
+    "price_per_night": 950,
+    "rating": 4.3,
+    "link": "https://www.oyorooms.com"
+  },
+  {
+    "name": "Alka Guest House",
+    "destination": "Varanasi",
+    "source": "Booking.com",
+    "price_per_night": 2800,
+    "rating": 4.4,
+    "link": "https://www.booking.com"
+  },
+  {
+    "name": "Goan Heritage Beach Resort",
+    "destination": "Goa",
+    "source": "MakeMyTrip",
+    "price_per_night": 5200,
+    "rating": 4.4,
+    "link": "https://www.makemytrip.com"
+  },
+  {
+    "name": "Taj Exotica Resort & Spa",
+    "destination": "Goa",
+    "source": "Booking.com",
+    "price_per_night": 24000,
+    "rating": 4.9,
+    "link": "https://www.booking.com"
+  },
+  {
+    "name": "Zostel Goa (Morjim)",
+    "destination": "Goa",
+    "source": "OYO",
+    "price_per_night": 1400,
+    "rating": 4.5,
+    "link": "https://www.oyorooms.com"
+  },
+  {
+    "name": "Munnar Tea Hills Resort",
+    "destination": "Kerala",
+    "source": "Booking.com",
+    "price_per_night": 3800,
+    "rating": 4.6,
+    "link": "https://www.booking.com"
+  },
+  {
+    "name": "Grand Hyatt Bolgatty Kochi",
+    "destination": "Kerala",
+    "source": "MakeMyTrip",
+    "price_per_night": 14000,
+    "rating": 4.8,
+    "link": "https://www.makemytrip.com"
+  },
+  {
+    "name": "Zostel Munnar",
+    "destination": "Kerala",
+    "source": "Booking.com",
+    "price_per_night": 1100,
+    "rating": 4.6,
+    "link": "https://www.booking.com"
+  },
+  {
+    "name": "The Grand Dragon Ladakh",
+    "destination": "Ladakh",
+    "source": "Booking.com",
+    "price_per_night": 9500,
+    "rating": 4.7,
+    "link": "https://www.booking.com"
+  },
+  {
+    "name": "Zostel Leh",
+    "destination": "Ladakh",
+    "source": "OYO",
+    "price_per_night": 1500,
+    "rating": 4.5,
+    "link": "https://www.oyorooms.com"
+  }
+]

@@ -41,13 +41,44 @@ RESPONSE RULES:
  * @returns {Promise<string>} - AI reply text
  */
 export async function sendChatToGemini(history, newMessage) {
-  // Build Gemini-format contents array from history + new message
+  const rawReply = await getRawChatResponse(history, newMessage);
+  if (rawReply && typeof rawReply === 'object') {
+    return rawReply;
+  }
+  return {
+    reply: rawReply || "No response generated.",
+    type: "chat",
+    data: []
+  };
+}
+
+async function getRawChatResponse(history, newMessage) {
+  // 1. Try Flask Backend Chat API first for real-time comparison support
+  try {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+    const response = await fetch(`${backendUrl}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ history, message: newMessage })
+    });
+    if (response.ok) {
+      const resData = await response.json();
+      return {
+        reply: resData.reply,
+        type: resData.type || 'chat',
+        data: resData.data || []
+      };
+    }
+  } catch (err) {
+    console.warn("Backend chat API offline, falling back to direct client-side Gemini:", err);
+  }
+
+  // 2. Direct Client-side Gemini Fallback
   const contents = history.map(msg => ({
     role: msg.role,
     parts: [{ text: msg.text }]
   }));
 
-  // Append the new user message
   contents.push({
     role: "user",
     parts: [{ text: newMessage }]
@@ -90,7 +121,11 @@ export async function sendChatToGemini(history, newMessage) {
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (text) {
-          return text.trim();
+          return {
+            reply: text.trim(),
+            type: "chat",
+            data: []
+          };
         }
 
         console.warn(`Gemini ${model} returned no text:`, JSON.stringify(data));
@@ -168,7 +203,7 @@ export async function startTripChat() {
   const greeting = "Hello! Welcome to Bharat Yatra. Start your trip planning session by saying hello or asking about a destination.";
   try {
     const reply = await sendChatToGemini([], greeting);
-    return reply;
+    return reply.reply || reply;
   } catch (err) {
     // Fallback greeting if API fails
     return "Namaste! 🙏 I'm your Bharat AI Architect — your expert guide to planning the perfect Indian journey.\n\nTell me:\n• Which city or region would you like to explore?\n• How many days do you have?\n• What type of experience are you looking for? (Heritage, Nature, Spiritual, Adventure, Food trails...)\n\nLet's design your dream Bharat journey!";

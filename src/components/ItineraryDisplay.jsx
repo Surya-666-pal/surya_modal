@@ -6,9 +6,11 @@ import {
   Navigation, Headphones, Bookmark, CheckCircle2
 } from 'lucide-react';
 import { saveTripOffline } from '../services/geminiAgent';
+import DayRouteOptimizerWidget from './DayRouteOptimizerWidget';
 
 export default function ItineraryDisplay({ itineraryData }) {
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [activeDayIdx, setActiveDayIdx] = useState(0);
 
   if (!itineraryData) return null;
 
@@ -107,56 +109,101 @@ export default function ItineraryDisplay({ itineraryData }) {
 
       {/* Days Breakdown */}
       <div className="space-y-4">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400">
-          Day-by-Day Schedule
-        </h4>
-
-        {days.map((d, index) => (
-          <div key={index} className="bg-forest-800/60 rounded-2xl p-4 border border-forest-700/80 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="font-serif font-bold text-sm text-saffron">
-                Day {d.day || index + 1}: {d.theme || d.title || `Exploring ${destination}`}
-              </span>
-              <span className="text-[11px] text-stone-400 font-mono">
-                {d.activities?.length || 3} Activities
-              </span>
-            </div>
-
-            <div className="space-y-3.5 text-xs">
-              {(d.activities || []).map((act, actIdx) => (
-                <div key={actIdx} className="flex gap-4 p-3 rounded-2xl bg-forest-900/60 border border-forest-700/40 text-stone-200 items-center hover:border-saffron/30 transition-colors shadow-sm">
-                  {act.image && (
-                    <img 
-                      src={act.image} 
-                      alt={act.name || act.title || "Famous Place"} 
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl border border-forest-800 shrink-0 shadow-md bg-forest-900"
-                      onError={(e) => {
-                        e.target.style.display = 'none'; // Clean fallback if image URL fails
-                      }}
-                    />
-                  )}
-                  <div className="flex-grow min-w-0">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <Clock className="w-3.5 h-3.5 text-saffron shrink-0" />
-                      <span className="font-mono text-[10px] text-stone-400 font-bold uppercase">{act.time || "Schedule"}</span>
-                      {act.category && (
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-forest-800/80 border border-forest-700 text-stone-300">
-                          {act.category}
-                        </span>
-                      )}
-                    </div>
-                    <div className="font-serif font-black text-white text-sm sm:text-base tracking-tight mb-0.5">
-                      {act.name || act.title}
-                    </div>
-                    <p className="text-stone-300 text-[11px] sm:text-xs leading-relaxed font-medium line-clamp-2">
-                      {act.description || act.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-forest-800 pb-3 gap-3">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400">
+            Day-by-Day Schedule & Route Maps
+          </h4>
+          
+          <div className="flex gap-1.5 bg-forest-950 p-1 rounded-xl border border-forest-800 self-stretch sm:self-auto overflow-x-auto">
+            {days.map((d, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveDayIdx(index)}
+                className={`px-3 py-1.5 rounded-lg text-[10px] font-extrabold uppercase transition-all cursor-pointer ${
+                  activeDayIdx === index
+                    ? 'bg-saffron text-white shadow-sm'
+                    : 'text-stone-400 hover:text-stone-200'
+                }`}
+              >
+                Day {d.day || index + 1}
+              </button>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {days.map((d, index) => {
+          if (activeDayIdx !== index) return null;
+          const currentActivities = d.activities || d.stops || [];
+          return (
+            <div key={index} className="space-y-6">
+              {/* Day Meta Info Header */}
+              <div className="bg-forest-800/80 p-4 rounded-2xl border border-forest-750 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div>
+                  <span className="text-[10px] font-bold text-saffron uppercase tracking-widest block mb-0.5">Active Path Theme</span>
+                  <h4 className="font-serif font-black text-white text-base">
+                    Day {d.day || index + 1}: {d.theme || d.title || `Exploring ${destination}`}
+                  </h4>
+                </div>
+                <div className="text-[10px] text-stone-300 font-mono bg-forest-900 border border-forest-700 px-3 py-1 rounded-xl">
+                  {currentActivities.length} Stops • {d.totalDistance || "Optimized Routes"}
+                </div>
+              </div>
+
+              {/* Map & Activity Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                {/* Left Column: Leaflet Map */}
+                <div className="w-full rounded-3xl overflow-hidden border border-forest-700 shadow-md h-[320px] lg:h-[420px]">
+                  <DayRouteOptimizerWidget
+                    activities={currentActivities}
+                    destination={destination}
+                    dayNumber={d.day || index + 1}
+                    className="w-full h-full"
+                  />
+                </div>
+
+                {/* Right Column: Time Slots List */}
+                <div className="space-y-3.5 max-h-[420px] overflow-y-auto pr-1">
+                  {currentActivities.map((act, actIdx) => (
+                    <div 
+                      key={actIdx} 
+                      className="flex gap-4 p-3 rounded-2xl bg-forest-800/50 border border-forest-750 text-stone-200 items-center hover:border-saffron/45 hover:bg-forest-850 transition-all shadow-sm"
+                    >
+                      {act.image && (
+                        <img 
+                          src={act.image} 
+                          alt={act.name || act.title || "Famous Place"} 
+                          className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl border border-forest-800 shrink-0 shadow-md bg-forest-900"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      )}
+                      <div className="flex-grow min-w-0">
+                        <div className="flex items-center gap-1.5 mb-1.5">
+                          <Clock className="w-3.5 h-3.5 text-saffron shrink-0" />
+                          <span className="font-mono text-[9px] text-stone-400 font-bold uppercase tracking-wider">
+                            {act.time || act.arrivalTime || "Schedule"}
+                          </span>
+                          {act.category && (
+                            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-forest-900 border border-forest-750 text-stone-300">
+                              {act.category}
+                            </span>
+                          )}
+                        </div>
+                        <div className="font-serif font-black text-white text-sm sm:text-base tracking-tight mb-1">
+                          {act.name || act.title}
+                        </div>
+                        <p className="text-stone-350 text-[11px] sm:text-xs leading-relaxed font-medium line-clamp-3">
+                          {act.description || act.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </motion.div>
   );
