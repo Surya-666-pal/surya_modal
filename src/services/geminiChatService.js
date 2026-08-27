@@ -4,7 +4,7 @@
  * Uses Google Gemini 2.0 Flash with multi-turn chat history so the AI
  * remembers the full conversation and provides contextual, accurate answers.
  */
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "REMOVED_SECRET";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const MODELS = ["gemini-3.6-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
 
 const SYSTEM_PROMPT = `You are "Bharat AI Architect", a friendly and expert AI trip planner for the Bharat Yatra app — a premium heritage and culture travel platform for India.

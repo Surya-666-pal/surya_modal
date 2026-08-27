@@ -8,7 +8,7 @@ import { saveTripOffline, getOfflineTrip, getAllOfflineTrips } from './offlineSt
 
 export { saveTripOffline, getOfflineTrip, getAllOfflineTrips };
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "REMOVED_SECRET";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 const MODELS = ["gemini-3.6-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
 

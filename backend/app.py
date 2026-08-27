@@ -36,7 +36,7 @@ socketio = SocketIO(
 register_chat_events(socketio)
 app.register_blueprint(chat_bp)
 
-GEMINI_API_KEY = os.getenv("VITE_GEMINI_API_KEY", "REMOVED_SECRET")
+GEMINI_API_KEY = os.getenv("VITE_GEMINI_API_KEY")
 
 SYSTEM_PROMPT = """You are "Bharat AI Architect", a friendly and expert AI trip planner for the Bharat Yatra app — a premium heritage and culture travel platform for India.
 You help users plan journeys, compare stays in budget, explore dining spots, and discover historic landmarks.

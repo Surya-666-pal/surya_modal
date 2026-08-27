@@ -7,7 +7,7 @@
 import { VIBE_MAPPING, CURATED_FALLBACK_GEMS, resolveLocationBias } from './vibeMapping';
 
 const GOOGLE_PLACES_KEY = import.meta.env.VITE_GOOGLE_PLACES_KEY || '';
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'REMOVED_SECRET';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const MODELS = ['gemini-3.6-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
 
 // In-memory session cache: Map<"vibeId:city", normalised results[]>
