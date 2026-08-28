@@ -20,20 +20,18 @@ function AnimatedRoutes({ onOpenPlannerModal }) {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <FlightTransition key={location.pathname}>
-        <Routes location={location}>
-          <Route path="/" element={<Home onOpenPlannerModal={onOpenPlannerModal} />} />
-          <Route path="/planner" element={<PlannerPage />} />
-          <Route path="/hidden-gems" element={<HiddenGemsPage />} />
-          <Route path="/group-room" element={<GroupRoomPage />} />
-          <Route path="/accessibility" element={<AccessibilityPage />} />
-          <Route path="/safety" element={<SafetyPage />} />
-          <Route path="/bookings" element={<BookingsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
-      </FlightTransition>
-    </AnimatePresence>
+    <FlightTransition>
+      <Routes location={location}>
+        <Route path="/" element={<Home onOpenPlannerModal={onOpenPlannerModal} />} />
+        <Route path="/planner" element={<PlannerPage />} />
+        <Route path="/hidden-gems" element={<HiddenGemsPage />} />
+        <Route path="/group-room" element={<GroupRoomPage />} />
+        <Route path="/accessibility" element={<AccessibilityPage />} />
+        <Route path="/safety" element={<SafetyPage />} />
+        <Route path="/bookings" element={<BookingsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Routes>
+    </FlightTransition>
   );
 }
 
