@@ -1,14 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Award, DownloadCloud, Heart, Globe, Settings, MapPin, 
   Sparkles, ShieldCheck, Camera, Calendar, Compass, FileCheck, 
-  Map, MessageSquare, ShieldAlert
+  Map, MessageSquare, ShieldAlert, Upload, Image, RotateCcw, Check, X, Edit3
 } from 'lucide-react';
 
+const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400&auto=format&fit=crop";
+
+const PRESET_AVATARS = [
+  { id: '1', name: 'Nomad Traveler', url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400&auto=format&fit=crop' },
+  { id: '2', name: 'Himalayan Explorer', url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&auto=format&fit=crop' },
+  { id: '3', name: 'Culture Pilgrim', url: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=400&auto=format&fit=crop' },
+  { id: '4', name: 'Solo Adventurer', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' },
+  { id: '5', name: 'Heritage Scholar', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop' },
+  { id: '6', name: 'Trail Guide', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=400&auto=format&fit=crop' },
+];
+
 export default function ProfilePage() {
-  const [profilePhoto, setProfilePhoto] = useState("https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400&auto=format&fit=crop");
+  const [profilePhoto, setProfilePhoto] = useState(() => {
+    return localStorage.getItem('bharat_yatra_profile_photo') || DEFAULT_AVATAR;
+  });
+  
+  const [userName, setUserName] = useState(() => {
+    return localStorage.getItem('bharat_yatra_user_name') || 'Aarav Sharma';
+  });
+
   const [activeTab, setActiveTab] = useState('badges'); // 'badges' | 'packs' | 'stamps'
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+  const [customUrlInput, setCustomUrlInput] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  const fileInputRef = useRef(null);
 
   // 3D Parallax Tilt States
   const [coords, setCoords] = useState({ x: 0.5, y: 0.5, rotateX: 0, rotateY: 0 });
@@ -29,6 +53,47 @@ export default function ProfilePage() {
   const handleMouseLeave = () => {
     setIsHovered(false);
     setCoords({ x: 0.5, y: 0.5, rotateX: 0, rotateY: 0 });
+  };
+
+  const notify = (msg) => {
+    setToastMessage(msg);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
+  const updatePhoto = (newPhotoUrl) => {
+    setProfilePhoto(newPhotoUrl);
+    localStorage.setItem('bharat_yatra_profile_photo', newPhotoUrl);
+    setIsPhotoModalOpen(false);
+    notify('Profile photo updated successfully!');
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Please choose an image under 5MB.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target.result;
+        updatePhoto(base64);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCustomUrlSubmit = (e) => {
+    e.preventDefault();
+    if (customUrlInput.trim()) {
+      updatePhoto(customUrlInput.trim());
+      setCustomUrlInput('');
+    }
+  };
+
+  const resetToDefault = () => {
+    updatePhoto(DEFAULT_AVATAR);
   };
 
   const containerVariant = {
@@ -58,20 +123,34 @@ export default function ProfilePage() {
     { city: "Jaipur", date: "Aug 27, 2026", type: "Pink Palace Entry", seal: "👑", rotation: "rotate-6", color: "border-pink-500 text-pink-600 bg-pink-500/5" }
   ];
 
-  const handlePhotoUpload = () => {
-    const photos = [
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=400&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400&auto=format&fit=crop"
-    ];
-    const currentIndex = photos.indexOf(profilePhoto);
-    const nextIndex = (currentIndex + 1) % photos.length;
-    setProfilePhoto(photos[nextIndex]);
-  };
-
   return (
     <div className="pt-28 pb-20 bg-cream min-h-screen relative overflow-hidden font-sans">
+      {/* Hidden File Input for Direct Local Image Upload */}
+      <input 
+        type="file" 
+        ref={fileInputRef} 
+        onChange={handleFileUpload} 
+        accept="image/*" 
+        className="hidden" 
+      />
+
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="fixed top-24 right-6 z-50 bg-forest-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-saffron/40 flex items-center gap-3"
+          >
+            <div className="w-6 h-6 rounded-full bg-saffron/20 text-saffron flex items-center justify-center font-bold text-xs">
+              <Check className="w-3.5 h-3.5" />
+            </div>
+            <span className="text-xs font-semibold">{toastMessage}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Floating Background Glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div 
@@ -136,6 +215,8 @@ export default function ProfilePage() {
               className="w-full h-full object-cover opacity-25 filter saturate-[0.8] contrast-[1.1]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-900/40 to-transparent" />
+            
+            {/* Government Travel Ambassador Official Gold Badge */}
             <div className="absolute top-4 right-4 flex items-center gap-3 z-10 bg-stone-950/80 p-2 rounded-2xl border border-saffron/35 backdrop-blur-md shadow-lg shadow-black/45">
               <img 
                 src="/explorer_badge.jpg" 
@@ -151,7 +232,8 @@ export default function ProfilePage() {
 
           {/* Profile Card Body */}
           <div className="relative px-6 pb-8 sm:px-8 flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16 sm:-mt-20 z-10">
-            {/* Avatar Column */}
+            
+            {/* Dynamic Avatar Column */}
             <div className="relative group shrink-0">
               {/* Rotating outer color-gradient ring */}
               <motion.div 
@@ -160,13 +242,23 @@ export default function ProfilePage() {
                 className="w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-gradient-to-tr from-saffron via-amber-500 to-emerald-500 p-[3px] shadow-lg"
               />
               
-              {/* Actual Avatar Image */}
-              <div className="absolute inset-[3px] rounded-full overflow-hidden bg-stone-900 border-2 border-stone-950 shadow-inner">
+              {/* Actual Avatar Image (Click to change) */}
+              <div 
+                onClick={() => setIsPhotoModalOpen(true)}
+                className="absolute inset-[3px] rounded-full overflow-hidden bg-stone-900 border-2 border-stone-950 shadow-inner cursor-pointer"
+                title="Click to change profile picture"
+              >
                 <img 
                   src={profilePhoto} 
                   alt="Traveller Avatar" 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
+                
+                {/* Hover overlay hint */}
+                <div className="absolute inset-0 bg-stone-950/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white backdrop-blur-[2px]">
+                  <Camera className="w-5 h-5 text-saffron mb-0.5" />
+                  <span className="text-[9px] font-bold uppercase tracking-wider">Change</span>
+                </div>
               </div>
 
               {/* Holographic Seal Over Profile Photo */}
@@ -176,9 +268,9 @@ export default function ProfilePage() {
 
               {/* Camera Upload Action Button */}
               <button 
-                onClick={handlePhotoUpload}
+                onClick={() => setIsPhotoModalOpen(true)}
                 className="absolute bottom-1 right-1 p-2.5 rounded-full bg-saffron hover:bg-amber-600 text-white border-2 border-stone-950 shadow-md transition-all duration-300 hover:scale-110 cursor-pointer"
-                title="Simulate Photo Upload"
+                title="Open Photo Customizer"
               >
                 <Camera className="w-4 h-4" />
               </button>
@@ -189,7 +281,7 @@ export default function ProfilePage() {
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
                   <h1 className="font-airstream text-4xl sm:text-5xl text-stone-100 tracking-wide leading-none drop-shadow-md">
-                    Aarav Sharma
+                    {userName}
                   </h1>
                   <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/35 text-emerald-400 text-[9px] font-engebrechtre tracking-widest uppercase">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
@@ -372,6 +464,144 @@ export default function ProfilePage() {
         </AnimatePresence>
 
       </div>
+
+      {/* Dynamic Profile Photo Customization Modal */}
+      <AnimatePresence>
+        {isPhotoModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsPhotoModalOpen(false)}
+              className="absolute inset-0 bg-stone-950/70 backdrop-blur-sm"
+            />
+
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-stone-200 z-10 space-y-6 overflow-hidden"
+            >
+              {/* Header wave bar */}
+              <div className="absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-saffron via-amber-500 to-emerald-500" />
+
+              <div className="flex justify-between items-start pt-1">
+                <div>
+                  <h3 className="font-serif text-xl font-black text-stone-900">
+                    Customize Profile Picture
+                  </h3>
+                  <p className="text-xs text-stone-500 font-medium mt-0.5">
+                    Upload your own photo or pick an explorer avatar preset.
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setIsPhotoModalOpen(false)}
+                  className="p-1.5 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Current Active Preview */}
+              <div className="flex items-center gap-4 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-saffron shadow-sm shrink-0">
+                  <img src={profilePhoto} alt="Current Preview" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">Current Avatar</span>
+                  <h4 className="font-serif font-black text-stone-800 text-sm">{userName}</h4>
+                  <span className="text-[11px] text-emerald-600 font-semibold">Active & Saved in LocalStorage</span>
+                </div>
+              </div>
+
+              {/* Upload Button Option */}
+              <div className="space-y-2">
+                <label className="block text-[10px] font-extrabold uppercase tracking-widest text-stone-500">
+                  Upload from your Device
+                </label>
+                <button 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full py-3.5 px-4 rounded-2xl bg-saffron/10 hover:bg-saffron/20 border-2 border-dashed border-saffron/40 text-forest-900 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                >
+                  <Upload className="w-4 h-4 text-saffron" />
+                  <span>Choose Photo from Computer / Phone (JPG, PNG)</span>
+                </button>
+              </div>
+
+              {/* Curated Preset Avatars Grid */}
+              <div className="space-y-2.5">
+                <label className="block text-[10px] font-extrabold uppercase tracking-widest text-stone-500">
+                  Or Pick a Curated Traveler Avatar
+                </label>
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
+                  {PRESET_AVATARS.map((avatar) => {
+                    const isSelected = profilePhoto === avatar.url;
+                    return (
+                      <button
+                        key={avatar.id}
+                        onClick={() => updatePhoto(avatar.url)}
+                        className={`relative rounded-2xl overflow-hidden aspect-square border-2 transition-all cursor-pointer group ${
+                          isSelected ? 'border-saffron ring-2 ring-saffron/40 scale-105' : 'border-stone-200 hover:border-stone-400'
+                        }`}
+                        title={avatar.name}
+                      >
+                        <img src={avatar.url} alt={avatar.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                        {isSelected && (
+                          <div className="absolute inset-0 bg-saffron/30 flex items-center justify-center text-white">
+                            <Check className="w-4 h-4" />
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Custom Image Web Link Input */}
+              <form onSubmit={handleCustomUrlSubmit} className="space-y-2">
+                <label className="block text-[10px] font-extrabold uppercase tracking-widest text-stone-500">
+                  Or Paste Image Web URL
+                </label>
+                <div className="flex gap-2">
+                  <input 
+                    type="url"
+                    placeholder="https://example.com/my-photo.jpg"
+                    value={customUrlInput}
+                    onChange={(e) => setCustomUrlInput(e.target.value)}
+                    className="flex-1 bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-saffron/40"
+                  />
+                  <button 
+                    type="submit"
+                    className="px-4 py-2 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    Apply URL
+                  </button>
+                </div>
+              </form>
+
+              {/* Reset to Default */}
+              <div className="border-t border-stone-100 pt-3 flex justify-between items-center">
+                <button 
+                  onClick={resetToDefault}
+                  className="text-xs text-stone-400 hover:text-stone-700 flex items-center gap-1.5 font-medium transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Reset to Default Avatar</span>
+                </button>
+                <button 
+                  onClick={() => setIsPhotoModalOpen(false)}
+                  className="px-4 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-bold transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

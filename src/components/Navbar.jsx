@@ -21,6 +21,19 @@ export default function Navbar({ onOpenPlannerModal }) {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState(languages[0]);
 
+  const [savedAvatar, setSavedAvatar] = useState(() => {
+    return localStorage.getItem('bharat_yatra_profile_photo') || null;
+  });
+
+  useEffect(() => {
+    const checkAvatar = () => {
+      setSavedAvatar(localStorage.getItem('bharat_yatra_profile_photo') || null);
+    };
+    checkAvatar();
+    window.addEventListener('storage', checkAvatar);
+    return () => window.removeEventListener('storage', checkAvatar);
+  }, [location.pathname]);
+
   const isHomePage = location.pathname === '/';
 
   useEffect(() => {
@@ -97,17 +110,23 @@ export default function Navbar({ onOpenPlannerModal }) {
           {/* Right Action Pill: Profile + CTA */}
           <div className="hidden lg:flex items-center gap-3">
 
-            {/* Profile Link */}
+            {/* Profile Link with Dynamic Avatar */}
             <Link
               to="/profile"
-              className={`p-2 rounded-full border transition-all ${
+              className={`rounded-full border transition-all flex items-center justify-center overflow-hidden ${
+                savedAvatar ? 'w-8 h-8 p-0.5' : 'p-2'
+              } ${
                 location.pathname === '/profile'
-                  ? 'bg-saffron text-white border-saffron shadow-md'
+                  ? 'bg-saffron text-white border-saffron shadow-md ring-2 ring-saffron/40'
                   : 'bg-white/10 hover:bg-white/20 border-white/20 text-stone-200'
               }`}
               aria-label="Profile"
             >
-              <User className="w-4 h-4" />
+              {savedAvatar ? (
+                <img src={savedAvatar} alt="Profile Avatar" className="w-full h-full object-cover rounded-full" />
+              ) : (
+                <User className="w-4 h-4" />
+              )}
             </Link>
 
             {/* Quick Action Button */}
