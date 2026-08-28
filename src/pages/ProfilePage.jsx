@@ -24,12 +24,24 @@ export default function ProfilePage() {
   const [userName, setUserName] = useState(() => {
     return localStorage.getItem('bharat_yatra_user_name') || 'Aarav Sharma';
   });
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState(userName);
 
   const [activeTab, setActiveTab] = useState('badges'); // 'badges' | 'packs' | 'stamps'
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [customUrlInput, setCustomUrlInput] = useState('');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  const saveUserName = (e) => {
+    e?.preventDefault();
+    if (tempName.trim()) {
+      setUserName(tempName.trim());
+      localStorage.setItem('bharat_yatra_user_name', tempName.trim());
+      setIsEditingName(false);
+      notify('Traveler name updated successfully!');
+    }
+  };
 
   const fileInputRef = useRef(null);
 
@@ -294,22 +306,81 @@ export default function ProfilePage() {
                 </button>
               </div>
 
-              {/* Profile Details Header */}
-              <div className="text-center md:text-left flex-grow space-y-4 pt-2">
-                <div className="space-y-2">
-                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                    <h1 className="font-airstream text-4xl sm:text-5xl text-white tracking-wide leading-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
-                      {userName}
-                    </h1>
-                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[9px] font-engebrechtre tracking-widest uppercase shadow-[inset_0_1px_2px_rgba(255,255,255,0.3)] backdrop-blur-md">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Inclusivity Ally</span>
+              {/* Skeuomorphic Liquid Glass User Nameplate Bar */}
+              <div className="text-center md:text-left flex-grow space-y-4 pt-2 w-full">
+                <div className="relative rounded-2xl p-4 sm:p-5 bg-gradient-to-r from-white/[0.12] via-white/[0.06] to-black/40 border border-white/25 shadow-[0_12px_28px_rgba(0,0,0,0.5),inset_0_1px_2px_rgba(255,255,255,0.4),inset_0_-2px_4px_rgba(0,0,0,0.5)] backdrop-blur-2xl overflow-hidden">
+                  
+                  {/* Top Convex Specular Highlight Arc */}
+                  <div className="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-white/20 via-white/5 to-transparent pointer-events-none" />
+
+                  <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    
+                    {/* User Name & Edit Action */}
+                    <div className="flex items-center justify-center md:justify-start gap-3">
+                      {isEditingName ? (
+                        <form onSubmit={saveUserName} className="flex items-center gap-2">
+                          <input 
+                            type="text" 
+                            value={tempName}
+                            onChange={(e) => setTempName(e.target.value)}
+                            autoFocus
+                            className="bg-black/60 border-2 border-saffron rounded-xl px-3 py-1.5 text-lg font-bold text-white font-airstream tracking-wide focus:outline-none shadow-inner"
+                          />
+                          <button 
+                            type="submit"
+                            className="p-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold transition-all shadow cursor-pointer"
+                            title="Save Name"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button 
+                            type="button"
+                            onClick={() => { setIsEditingName(false); setTempName(userName); }}
+                            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-stone-300 font-bold transition-all cursor-pointer"
+                            title="Cancel"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </form>
+                      ) : (
+                        <div className="flex items-center gap-2.5 group">
+                          <h1 className="font-airstream text-4xl sm:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-saffron to-amber-300 tracking-wide leading-none drop-shadow-[0_2px_8px_rgba(240,147,43,0.45)]">
+                            {userName}
+                          </h1>
+                          <button 
+                            onClick={() => { setIsEditingName(true); setTempName(userName); }}
+                            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 text-stone-300 hover:text-white transition-all opacity-75 hover:opacity-100 cursor-pointer"
+                            title="Edit Traveler Name"
+                          >
+                            <Edit3 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Official Accreditation Seal Pill */}
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500/25 to-teal-500/15 border border-emerald-400/50 text-emerald-300 text-[10px] font-engebrechtre tracking-widest uppercase shadow-[inset_0_1px_2px_rgba(255,255,255,0.35),0_4px_10px_rgba(0,0,0,0.4)] backdrop-blur-md font-bold">
+                        <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                        <span>Inclusivity Ally</span>
+                      </span>
+                    </div>
+
+                  </div>
+
+                  {/* Tactile Location & Expedition Badges Bar */}
+                  <div className="relative z-10 flex flex-wrap items-center justify-center md:justify-start gap-2 pt-3 border-t border-white/10 mt-3">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/30 border border-white/10 text-[11px] text-stone-300 font-medium shadow-inner">
+                      <span>📍 Bangalore, Karnataka</span>
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/30 border border-white/10 text-[11px] text-stone-300 font-medium shadow-inner">
+                      <span>🏛️ 14 States Explored</span>
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/30 border border-white/10 text-[11px] text-amber-300 font-medium shadow-inner">
+                      <span>🤟 ISL Trained Companion</span>
                     </span>
                   </div>
-                  
-                  <p className="text-xs text-stone-300 font-medium drop-shadow">
-                    📍 Bangalore, Karnataka · 14 States Explored · ISL Trained Companion
-                  </p>
+
                 </div>
 
                 {/* Skeuomorphic Liquid Glass Stats Tiles */}
