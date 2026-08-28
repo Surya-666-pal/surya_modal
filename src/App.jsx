@@ -14,6 +14,7 @@ import BookingsPage from './pages/BookingsPage';
 import ProfilePage from './pages/ProfilePage';
 import TripPlannerModal from './components/TripPlannerModal';
 import AIAssistantWidget from './components/AIAssistantWidget';
+import ScrollToTop from './components/ScrollToTop';
 
 function AnimatedRoutes({ onOpenPlannerModal }) {
   const location = useLocation();
@@ -41,6 +42,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="min-h-screen bg-cream text-stone-900 font-sans selection:bg-saffron selection:text-white flex flex-col overflow-x-hidden">
         {/* Static Top Navbar */}
         <Navbar onOpenPlannerModal={() => setIsModalOpen(true)} />

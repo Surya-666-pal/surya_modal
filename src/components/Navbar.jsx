@@ -72,7 +72,7 @@ export default function Navbar({ onOpenPlannerModal }) {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden xl:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-4 xl:gap-6">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.href;
               return (
@@ -121,7 +121,7 @@ export default function Navbar({ onOpenPlannerModal }) {
           </div>
 
           {/* Mobile Hamburger Menu Button */}
-          <div className="flex xl:hidden items-center gap-2">
+          <div className="flex lg:hidden items-center gap-2">
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -142,7 +142,7 @@ export default function Navbar({ onOpenPlannerModal }) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 xl:hidden bg-forest-900/98 backdrop-blur-2xl flex flex-col justify-between pt-24 pb-8 px-6 text-white overflow-y-auto"
+            className="fixed inset-0 z-40 lg:hidden bg-forest-900/98 backdrop-blur-2xl flex flex-col justify-between pt-24 pb-8 px-6 text-white overflow-y-auto"
           >
             <div className="space-y-6">
               <div className="border-b border-white/10 pb-4">
