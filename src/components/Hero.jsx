@@ -77,27 +77,14 @@ export default function Hero({ onOpenPlanner, onExploreGems }) {
       >
         <video
           ref={videoRef}
-          src={heroVideoSrc || "/hero-video.mp4"}
-          poster="/assets/hero-traveler.png"
+          src={heroVideoSrc}
           autoPlay
           loop
           muted
           playsInline
           preload="auto"
-          onError={(e) => {
-            console.error("Hero background video failed to load:", e);
-          }}
-          onLoadedData={() => {
-            if (videoRef.current) {
-              videoRef.current.muted = true;
-              videoRef.current.play().catch(() => {});
-            }
-          }}
           className="absolute inset-0 w-full h-full object-cover object-center"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-          <source src="/assets/hero-video.mp4" type="video/mp4" />
-        </video>
+        />
       </motion.div>
 
       {/* Cinematic Gradient Overlays - z-10 */}
@@ -163,8 +150,15 @@ export default function Hero({ onOpenPlanner, onExploreGems }) {
               </motion.button>
 
               {/* Secondary CTA: "Explore Hidden Gems" in Dustismo Roman Bold with Translucent Glassmorphism */}
-              <motion.a
-                href="#destinations"
+              <motion.button
+                onClick={() => {
+                  const el = document.getElementById('destinations');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                  } else if (onExploreGems) {
+                    onExploreGems();
+                  }
+                }}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 className="font-dustismo px-8 py-4 rounded-full glass-btn-secondary hover:bg-white/20 text-white font-bold text-base tracking-wide flex items-center justify-center gap-2.5 transition-all duration-300 cursor-pointer"
@@ -173,7 +167,7 @@ export default function Hero({ onOpenPlanner, onExploreGems }) {
                 <span className="text-white drop-shadow-sm">
                   Explore Hidden Gems
                 </span>
-              </motion.a>
+              </motion.button>
             </motion.div>
 
             {/* Feature Badges with Translucent Glass Frost */}
