@@ -38,16 +38,29 @@ app.register_blueprint(chat_bp)
 
 GEMINI_API_KEY = os.getenv("VITE_GEMINI_API_KEY")
 
-SYSTEM_PROMPT = """You are "Bharat AI Architect", a friendly and expert AI trip planner for the Bharat Yatra app — a premium heritage and culture travel platform for India.
-You help users plan journeys, compare stays in budget, explore dining spots, and discover historic landmarks.
+SYSTEM_PROMPT = """You are "Bharat AI Architect", a friendly, certified expert AI trip planner and government-data-backed heritage guide for the Bharat Yatra app.
+You specialize in Indian cultural destinations, especially Varanasi (Kashi), Jaipur, Kerala, Spiti/Ladakh, Goa, and heritage circuits.
 
-Response Guidelines:
-1. PLANNING: If asked for travel planning or itineraries, generate a day-by-day tour guide path.
-2. ROOMS / STAYS: If asked about rooms, accommodation, or hotels, make sure to check/resolve "How many sharing?" (1, 2, 3+ sharing) and budget limits. Trigger the compare_stays_in_budget tool using sharing count and any specified booking sites (Booking.com, MakeMyTrip, OYO).
-3. FOOD / RESTAURANTS: If asked about dining, food trails, or restaurants, trigger the get_food_and_restaurants tool.
-4. SPECIFIC LANDMARKS: If asked about a specific monument or place, trigger the get_specific_place_info tool.
+You have access to official Government & ASI (Archaeological Survey of India) tourism records:
+- VARANASI (KASHI) OFFICIAL DATA:
+  * Kashi Vishwanath Temple: General entry is FREE. Sugam Darshan (VIP priority pass from shrikashivishwanath.org) is ₹300/person. Mangala Aarti Pass is ₹500 (3:00 AM - 4:00 AM). Rudrabhishek ranges from ₹450 to ₹2,100. Ramps & battery golf carts available at Gate No. 4.
+  * Sarnath ASI Stupa Complex (asi.nic.in): E-ticket is ₹25 for Indians/SAARC/BIMSTEC, ₹300 for Foreigners. Free for children under 15 years. Sarnath Archaeological Museum is ₹5 (Closed on Fridays).
+  * Ganga River Tourism (Regulated by Varanasi Smart City & Inland Waterways Authority of India):
+    - Shared Wooden Rowing Boat: ₹100 - ₹200 / person.
+    - Private Motorised Bajra (10-15 people for Evening Aarti): ₹1,800 - ₹2,500 total.
+    - UP Tourism Alaknanda Electric AC Luxury Catamaran Cruise: ₹750 - ₹1,200 / person (Assi to Rajghat with snacks & Vedic commentary).
+    - Ro-Pax Ferry: ₹350 / head.
+  * Vehicle & Transport Rentals in Varanasi:
+    - Scooters (Activa 6G / EV): ₹450 - ₹650 / day (Ideal for navigating Godowlia, Chowk, Assi, BHU lanes).
+    - Auto / E-Rickshaw Full-Day Pass: ₹800 - ₹1,200 / day.
+    - AC Sedan (Swift Dzire / Etios): ₹1,400 - ₹1,800 / day (Best for Sarnath, Airport, Ramnagar Fort).
+    - 7-Seater MPV (Innova Crysta): ₹3,500 - ₹4,200 / day (Best for Prayagraj / Ayodhya day trips).
+  * 3-Tier Varanasi Budgets:
+    - Backpacker / Solo: ₹1,200 - ₹1,800 / day (Hostel near Assi Ghat, street food like kachori-jalebi and lassi, shared e-rickshaw).
+    - Balanced Heritage & Family: ₹3,500 - ₹6,000 / day (Riverside Haveli, Sugam Darshan pass, private boat, AC cab).
+    - Luxury Pilgrimage: ₹12,000 - ₹25,000+ / day (BrijRama Palace / Taj Ganges, private VIP cruise, certified ASI historian guide).
 
-Always return a helpful conversational reply explaining the tool results naturally.
+Always respond clearly with real prices in INR (₹), authentic timings, government verification notes, and step-by-step itineraries.
 """
 
 def load_stays_data():
@@ -122,6 +135,49 @@ def get_food_and_restaurants(destination, food_type=None):
 
 def get_specific_place_info(place_name):
     places_info = {
+        "kashi vishwanath": {
+            "name": "Shri Kashi Vishwanath Temple & Corridor (Kashi)",
+            "destination": "Varanasi, UP",
+            "timings": "3:00 AM - 11:00 PM daily (Mangala Aarti 3:00 AM - 4:00 AM)",
+            "entry_fee": "General Entry: FREE. Sugam Darshan (Govt VIP Pass): ₹300. Mangala Aarti Pass: ₹500",
+            "official_portal": "shrikashivishwanath.org (Official Temple Trust)",
+            "description": "One of the twelve sacred Jyotirlingas, revamped with the grand 5-lakh sq ft riverfront Kashi Vishwanath Corridor connecting the temple directly to Manikarnika and Lalita Ghats on the holy Ganga.",
+            "tips": "Book Sugam Darshan online in advance. Cloakrooms and free lockers available at Gate 4. Wheelchairs and battery golf carts available for elders."
+        },
+        "sarnath": {
+            "name": "Sarnath Buddhist Monument Complex & Dhamek Stupa",
+            "destination": "Varanasi (10 km north), UP",
+            "timings": "Sunrise to Sunset (6:00 AM - 6:00 PM)",
+            "entry_fee": "ASI E-Ticket: ₹25 for Indians/SAARC, ₹300 for Foreigners, Free for children < 15. Museum: ₹5 (Closed Fridays)",
+            "official_portal": "asi.nic.in (Archaeological Survey of India)",
+            "description": "UNESCO-nominated heritage site where Lord Buddha delivered his first sermon (Dhammacakkappavattana Sutta). Contains the 500 CE Dhamek Stupa and the original Ashoka Pillar capital.",
+            "tips": "Do not miss the Sarnath Archaeological Museum right opposite the stupa park to see the real 3rd century BCE Ashoka Lion Capital (India's national emblem)."
+        },
+        "dashashwamedh": {
+            "name": "Dashashwamedh Ghat & Maha Ganga Aarti",
+            "destination": "Varanasi, UP",
+            "timings": "Aarti ceremony starts daily at 6:45 PM (Summer) / 6:00 PM (Winter)",
+            "entry_fee": "Free to watch from Ghat steps. Shared boat: ₹150 - ₹200. Private Bajra boat: ₹1,800 - ₹2,500",
+            "official_portal": "varanasismartcity.gov.in & uptourism.gov.in",
+            "description": "The most spectacular riverfront amphitheater in India where 7 priests perform synchronized brass lamp rituals with conch shells and incense dedicated to Goddess Ganga and Lord Shiva.",
+            "tips": "Arrive by 5:30 PM to secure a front-row boat or seating on the ghat steps."
+        },
+        "assi ghat": {
+            "name": "Assi Ghat & Subah-e-Banaras",
+            "destination": "Varanasi, UP",
+            "timings": "Subah-e-Banaras starts daily at 5:00 AM (Dawn Vedic chants, morning Aarti & classical music)",
+            "entry_fee": "Free",
+            "description": "The southernmost major ghat of Varanasi, famous for dawn yoga, Vedic yajna, classical music concerts, and morning boat tours.",
+            "tips": "Start your day here at 5:00 AM, take a sunrise rowboat to Manikarnika, and enjoy hot lemon tea and banarasi kachori near the ghat."
+        },
+        "ramnagar fort": {
+            "name": "Ramnagar Fort & Saraswati Bhawan Museum",
+            "destination": "Varanasi (Eastern Ganga Bank)",
+            "timings": "9:30 AM - 5:00 PM",
+            "entry_fee": "₹75 for Fort & Museum",
+            "description": "18th-century cream-sandstone fortress residence of the Kashi Naresh (Maharaja of Varanasi), housing antique cars, palanquins, ivory carvings, and astronomical clocks.",
+            "tips": "Try the famous lassi at the century-old Shiv Prasad Lassi stall right outside the fort entrance."
+        },
         "hawa mahal": {
             "name": "Hawa Mahal (Palace of Winds)",
             "destination": "Jaipur",
@@ -137,22 +193,6 @@ def get_specific_place_info(place_name):
             "entry_fee": "₹100 for Indians, ₹500 for foreigners",
             "description": "A magnificent fort located in Amer town, famous for its artistic Hindu style elements, overlooking Maota Lake.",
             "tips": "Hire a registered guide to hear stories of Sheesh Mahal (Mirror Palace) and catch the spectacular Sound & Light show in the evening."
-        },
-        "kashi vishwanath": {
-            "name": "Kashi Vishwanath Temple",
-            "destination": "Varanasi",
-            "timings": "3:00 AM - 11:00 PM",
-            "entry_fee": "Free entry, VIP Darshan ₹300",
-            "description": "One of the most famous Hindu temples dedicated to Lord Shiva, located on the western bank of the holy river Ganges.",
-            "tips": "Avoid carrying mobile phones or electronic gadgets as they are strictly prohibited inside. Go early morning for shorter queue lines."
-        },
-        "baga beach": {
-            "name": "Baga Beach",
-            "destination": "Goa",
-            "timings": "24/7 accessible",
-            "entry_fee": "Free",
-            "description": "A popular beach in North Goa known for its active nightlife, beach shacks, water sports, and dolphin cruises.",
-            "tips": "Try parasailing and jet-skiing in the morning, and enjoy fresh seafood at Britto's shack during sunset."
         }
     }
     

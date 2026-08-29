@@ -271,10 +271,12 @@ export default function AIAssistantWidget() {
             {/* Quick Prompt Suggestions */}
             <div className="px-3 py-2 bg-black/20 border-t border-white/5 flex gap-1.5 overflow-x-auto no-scrollbar">
               {[
-                "3 days in Varanasi for Heritage & Food",
+                "🪔 Varanasi 3-Day Heritage & Aarti Plan",
+                "🎟️ Kashi Vishwanath Govt VIP Passes & Timings",
+                "🚗 Varanasi Vehicle Rent & Daily Budget",
+                "🏛️ Sarnath ASI Monument Entry Fees & Museum",
                 "Spiti Valley 5-day adventure trek",
                 "Kerala backwaters 4 days with family",
-                "Jaipur & Udaipur luxury palace tour",
                 "Yes, generate my itinerary!"
               ].map((suggestion, sIdx) => (
                 <button
