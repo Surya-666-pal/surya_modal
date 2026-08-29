@@ -269,46 +269,64 @@ export default function ProfilePage() {
 
             </div>
 
-            {/* Bottom 3 Glass Stat Panels (Bold & Black with Shadow) */}
+            {/* Bottom 3 Glass Stat Panels with Enhanced Font Styling */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 pt-4">
               
               {/* Stat Box 1: Monuments Visited */}
               <motion.div 
                 whileHover={{ scale: 1.03, y: -3 }}
-                className="rounded-3xl p-5 sm:p-6 bg-white/40 border border-white/80 backdrop-blur-2xl shadow-[0_10px_35px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.8)] text-center sm:text-left transition-all hover:bg-white/60 hover:border-black/40 group"
+                className="rounded-3xl p-5 sm:p-6 bg-white/45 border border-white/85 backdrop-blur-2xl shadow-[0_12px_35px_rgba(0,0,0,0.22),inset_0_2px_6px_rgba(255,255,255,0.9)] text-center sm:text-left transition-all hover:bg-white/65 hover:border-black/50 group"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-black uppercase tracking-widest text-black drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">Heritage Trail</span>
+                <div className="flex items-center justify-between mb-2.5">
+                  <span className="font-coolvetica text-xs font-black uppercase tracking-wider text-black drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
+                    Heritage Trail
+                  </span>
                   <Award className="w-5 h-5 text-black opacity-90 group-hover:scale-110 transition-transform font-black" />
                 </div>
-                <span className="font-kongquest text-3xl sm:text-4xl text-black font-black block leading-none drop-shadow-[0_2px_6px_rgba(255,255,255,0.9)]">28</span>
-                <p className="text-[11px] text-black font-black tracking-widest mt-2 uppercase drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">Monuments Visited</p>
+                <span className="font-serif text-4xl sm:text-5xl text-black font-black block leading-none drop-shadow-[0_2px_8px_rgba(255,255,255,0.95)] tracking-tight">
+                  28
+                </span>
+                <p className="font-engebrechtre text-xs sm:text-sm text-stone-900 font-black tracking-widest mt-2 uppercase drop-shadow-[0_1px_3px_rgba(255,255,255,0.9)]">
+                  Monuments Visited
+                </p>
               </motion.div>
 
               {/* Stat Box 2: Offline State Packs */}
               <motion.div 
                 whileHover={{ scale: 1.03, y: -3 }}
-                className="rounded-3xl p-5 sm:p-6 bg-white/40 border border-white/80 backdrop-blur-2xl shadow-[0_10px_35px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.8)] text-center sm:text-left transition-all hover:bg-white/60 hover:border-black/40 group"
+                className="rounded-3xl p-5 sm:p-6 bg-white/45 border border-white/85 backdrop-blur-2xl shadow-[0_12px_35px_rgba(0,0,0,0.22),inset_0_2px_6px_rgba(255,255,255,0.9)] text-center sm:text-left transition-all hover:bg-white/65 hover:border-black/50 group"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-black uppercase tracking-widest text-black drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">Data Cached</span>
+                <div className="flex items-center justify-between mb-2.5">
+                  <span className="font-coolvetica text-xs font-black uppercase tracking-wider text-black drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
+                    Data Cached
+                  </span>
                   <DownloadCloud className="w-5 h-5 text-black opacity-90 group-hover:scale-110 transition-transform font-black" />
                 </div>
-                <span className="font-kongquest text-3xl sm:text-4xl text-black font-black block leading-none drop-shadow-[0_2px_6px_rgba(255,255,255,0.9)]">06</span>
-                <p className="text-[11px] text-black font-black tracking-widest mt-2 uppercase drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">Offline state packs</p>
+                <span className="font-serif text-4xl sm:text-5xl text-black font-black block leading-none drop-shadow-[0_2px_8px_rgba(255,255,255,0.95)] tracking-tight">
+                  06
+                </span>
+                <p className="font-engebrechtre text-xs sm:text-sm text-stone-900 font-black tracking-widest mt-2 uppercase drop-shadow-[0_1px_3px_rgba(255,255,255,0.9)]">
+                  Offline state packs
+                </p>
               </motion.div>
 
               {/* Stat Box 3: Explorer Tier */}
               <motion.div 
                 whileHover={{ scale: 1.03, y: -3 }}
-                className="rounded-3xl p-5 sm:p-6 bg-white/40 border border-white/80 backdrop-blur-2xl shadow-[0_10px_35px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.8)] text-center sm:text-left transition-all hover:bg-white/60 hover:border-black/40 group"
+                className="rounded-3xl p-5 sm:p-6 bg-white/45 border border-white/85 backdrop-blur-2xl shadow-[0_12px_35px_rgba(0,0,0,0.22),inset_0_2px_6px_rgba(255,255,255,0.9)] text-center sm:text-left transition-all hover:bg-white/65 hover:border-black/50 group"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-black uppercase tracking-widest text-black drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">Rank Status</span>
+                <div className="flex items-center justify-between mb-2.5">
+                  <span className="font-coolvetica text-xs font-black uppercase tracking-wider text-black drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
+                    Rank Status
+                  </span>
                   <Sparkles className="w-5 h-5 text-black opacity-90 group-hover:scale-110 transition-transform font-black" />
                 </div>
-                <span className="font-kongquest text-3xl sm:text-4xl text-black font-black block leading-none drop-shadow-[0_2px_6px_rgba(255,255,255,0.9)]">LVL 4</span>
-                <p className="text-[11px] text-black font-black tracking-widest mt-2 uppercase drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">Explorer Tier</p>
+                <span className="font-serif text-4xl sm:text-5xl text-black font-black block leading-none drop-shadow-[0_2px_8px_rgba(255,255,255,0.95)] tracking-tight">
+                  LVL 4
+                </span>
+                <p className="font-engebrechtre text-xs sm:text-sm text-stone-900 font-black tracking-widest mt-2 uppercase drop-shadow-[0_1px_3px_rgba(255,255,255,0.9)]">
+                  Explorer Tier
+                </p>
               </motion.div>
 
             </div>
