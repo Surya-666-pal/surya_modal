@@ -655,7 +655,203 @@ def split_sharing_cost():
         "per_person_share": share
     }), 200
 
+VEHICLES_DATABASE = [
+    {
+        "id": "VH-101",
+        "name": "Mahindra Thar 4x4 (Expedition Hardtop)",
+        "type": "suv_4x4",
+        "category_label": "4x4 Mountain SUV",
+        "image": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=800&auto=format&fit=crop",
+        "price_per_day": 4200,
+        "seats": 4,
+        "transmission": "Manual / Automatic",
+        "fuel": "Diesel (15 km/l)",
+        "rating": 4.92,
+        "reviews": 328,
+        "locations": ["manali", "leh", "spiti", "rishikesh", "jaipur"],
+        "recommended_for": ["manali", "leh", "spiti", "rishikesh"],
+        "terrain_tag": "High Altitude & Rocky Offroad",
+        "features": ["4WD Low-Range", "All-Terrain Tyres", "GPS Offline Maps", "Zero Deposit", "Roof Rack Ready"]
+    },
+    {
+        "id": "VH-102",
+        "name": "Royal Enfield Himalayan 450",
+        "type": "bike",
+        "category_label": "Adventure Motorcycle",
+        "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=800&auto=format&fit=crop",
+        "price_per_day": 1400,
+        "seats": 2,
+        "transmission": "6-Speed Manual",
+        "fuel": "Petrol (30 km/l)",
+        "rating": 4.95,
+        "reviews": 512,
+        "locations": ["manali", "leh", "spiti", "rishikesh", "goa"],
+        "recommended_for": ["leh", "manali", "spiti", "rishikesh"],
+        "terrain_tag": "High Mountain Passes & River Crossings",
+        "features": ["Dual Channel Switchable ABS", "Pannier Mounts", "TFT Tripper Navigation", "Helmet Included", "24/7 Roadside Assist"]
+    },
+    {
+        "id": "VH-103",
+        "name": "Honda Activa 6G / Ather 450X",
+        "type": "scooter",
+        "category_label": "City & Coastal Scooter",
+        "image": "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=800&auto=format&fit=crop",
+        "price_per_day": 550,
+        "seats": 2,
+        "transmission": "Automatic (CVT)",
+        "fuel": "Petrol / Electric (55 km/l)",
+        "rating": 4.86,
+        "reviews": 840,
+        "locations": ["goa", "pondicherry", "varanasi", "kochi", "rishikesh", "jaipur"],
+        "recommended_for": ["goa", "pondicherry", "varanasi", "kochi"],
+        "terrain_tag": "Coastal Cruising & Old City Alleys",
+        "features": ["Easy Handling", "Front Storage Pocket", "Helmets Included", "Instant Fuel Fill", "Unlimited Kilometres"]
+    },
+    {
+        "id": "VH-104",
+        "name": "Toyota Innova Crysta / Hycross",
+        "type": "van_mpv",
+        "category_label": "Luxury 7-Seater MPV",
+        "image": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800&auto=format&fit=crop",
+        "price_per_day": 3800,
+        "seats": 7,
+        "transmission": "Automatic",
+        "fuel": "Diesel / Hybrid (16 km/l)",
+        "rating": 4.94,
+        "reviews": 460,
+        "locations": ["jaipur", "udaipur", "munnar", "kochi", "bangalore", "varanasi", "manali"],
+        "recommended_for": ["jaipur", "udaipur", "munnar", "kochi", "bangalore"],
+        "terrain_tag": "Long Highway Circuits & Hill Stations",
+        "features": ["Captain Seats with Recline", "Dual Zone Rear AC", "Huge Boot Luggage Space", "Chauffeur / Self-Drive", "Toll FASTag Included"]
+    },
+    {
+        "id": "VH-105",
+        "name": "Maruti Suzuki Swift / Dzire ZXi",
+        "type": "sedan",
+        "category_label": "Economy City & Highway Sedan",
+        "image": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=800&auto=format&fit=crop",
+        "price_per_day": 1350,
+        "seats": 5,
+        "transmission": "Manual / AMT",
+        "fuel": "Petrol (22.5 km/l)",
+        "rating": 4.82,
+        "reviews": 620,
+        "locations": ["jaipur", "varanasi", "bangalore", "goa", "kochi", "rishikesh"],
+        "recommended_for": ["jaipur", "varanasi", "bangalore"],
+        "terrain_tag": "Budget City Exploration & Heritage Monuments",
+        "features": ["Best Mileage In Class", "Touchscreen Android Auto / CarPlay", "Reverse Camera", "AC Climate Control", "Clean & Sanitized"]
+    },
+    {
+        "id": "VH-106",
+        "name": "Tata Nexon EV Max (Long Range)",
+        "type": "ev",
+        "category_label": "Eco-Friendly Electric SUV",
+        "image": "https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=800&auto=format&fit=crop",
+        "price_per_day": 2200,
+        "seats": 5,
+        "transmission": "Single Speed Electric",
+        "fuel": "Electric (453 km Range)",
+        "rating": 4.89,
+        "reviews": 195,
+        "locations": ["bangalore", "kochi", "munnar", "goa", "jaipur"],
+        "recommended_for": ["bangalore", "kochi", "munnar"],
+        "terrain_tag": "Silent Green Corridors & Eco-Tourism Trails",
+        "features": ["Zero Emissions", "Free Fast Charging Pass", "Regenerative Braking", "Ventilated Front Seats", "Harman Sound System"]
+    },
+    {
+        "id": "VH-107",
+        "name": "Force Urbania 12-Seater Super Luxury Van",
+        "type": "van_mpv",
+        "category_label": "Group Executive Van",
+        "image": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=800&auto=format&fit=crop",
+        "price_per_day": 7800,
+        "seats": 12,
+        "transmission": "Manual with ABS/ESP",
+        "fuel": "Diesel (12 km/l)",
+        "rating": 4.96,
+        "reviews": 140,
+        "locations": ["manali", "leh", "jaipur", "varanasi", "kochi", "bangalore", "rishikesh"],
+        "recommended_for": ["manali", "leh", "jaipur", "rishikesh"],
+        "terrain_tag": "Large Family & Friends Mountain Roadtrips",
+        "features": ["Individual Reclining Seats", "Panoramic Tinted Windows", "Individual USB Ports & Reading Lights", "High Roof Standing Cabin", "Verified Hill Driver Optional"]
+    },
+    {
+        "id": "VH-108",
+        "name": "Toyota Fortuner 4x4 Legender",
+        "type": "suv_4x4",
+        "category_label": "VIP Heavy Duty 4WD SUV",
+        "image": "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=800&auto=format&fit=crop",
+        "price_per_day": 6900,
+        "seats": 7,
+        "transmission": "6-Speed Automatic 4WD",
+        "fuel": "Diesel (14 km/l)",
+        "rating": 4.97,
+        "reviews": 280,
+        "locations": ["manali", "leh", "spiti", "jaipur", "udaipur", "bangalore"],
+        "recommended_for": ["leh", "spiti", "jaipur", "udaipur"],
+        "terrain_tag": "Extreme Terrain & Royal VIP Escort",
+        "features": ["Dual Range 4WD", "Downhill Assist Control", "Premium Leather Interior", "JBL 11-Speaker Audio", "Unlimited Adventure Radius"]
+    }
+]
 
+@app.route('/api/vehicles/search', methods=['GET'])
+def search_vehicles():
+    location = request.args.get('location', '').lower().strip()
+    v_type = request.args.get('type', '').lower().strip()
+    max_price = request.args.get('max_price', None)
+    min_price = request.args.get('min_price', None)
+
+    filtered = []
+    for v in VEHICLES_DATABASE:
+        if location and location not in v['locations']:
+            continue
+        if v_type and v_type != 'all' and v['type'] != v_type:
+            continue
+        if max_price:
+            try:
+                if v['price_per_day'] > float(max_price):
+                    continue
+            except ValueError:
+                pass
+        if min_price:
+            try:
+                if v['price_per_day'] < float(min_price):
+                    continue
+            except ValueError:
+                pass
+        
+        # Determine if highly recommended for this location
+        is_recommended = bool(location and location in v.get('recommended_for', []))
+        item = dict(v)
+        item['is_recommended_for_location'] = is_recommended
+        filtered.append(item)
+
+    # Sort so location-recommended vehicles appear first
+    filtered.sort(key=lambda x: (not x.get('is_recommended_for_location', False), x['price_per_day']))
+    return jsonify({"vehicles": filtered, "count": len(filtered)}), 200
+
+@app.route('/api/vehicles/book', methods=['POST'])
+def book_vehicle():
+    data = request.json or {}
+    vehicle_id = data.get('vehicle_id')
+    user_name = data.get('user_name', 'Guest Explorer')
+    pickup_date = data.get('pickup_date')
+    return_date = data.get('return_date')
+    location = data.get('location', 'General')
+    driver_option = data.get('driver_option', 'self_drive')
+    
+    booking_ref = f"BY-VH-{os.urandom(3).hex().upper()}"
+    return jsonify({
+        "status": "confirmed",
+        "booking_id": booking_ref,
+        "vehicle_id": vehicle_id,
+        "user_name": user_name,
+        "pickup_date": pickup_date,
+        "return_date": return_date,
+        "location": location,
+        "driver_option": driver_option,
+        "message": "Vehicle rental reserved with zero cancellation penalty!"
+    }), 200
 
 @app.route('/health')
 def health_check():

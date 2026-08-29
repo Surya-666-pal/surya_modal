@@ -4,8 +4,205 @@ import {
   Ticket, Calendar, MapPin, Check, Star, ShieldCheck, ArrowRight, 
   QrCode, Download, Search, Filter, Clock, Sparkles, UserCheck, 
   Compass, ChevronRight, X, ExternalLink, RefreshCw, Zap, Users,
-  Loader2, CheckCircle2
+  Loader2, CheckCircle2, Car, Fuel, Gauge, Key, Navigation, Bike,
+  SlidersHorizontal, IndianRupee, Truck, ShieldAlert, Award
 } from 'lucide-react';
+
+const DEFAULT_VEHICLES = [
+  {
+    id: "VH-101",
+    name: "Mahindra Thar 4x4 (Expedition Hardtop)",
+    type: "suv_4x4",
+    category_label: "4x4 Mountain SUV",
+    image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=800&auto=format&fit=crop",
+    price_per_day: 4200,
+    seats: 4,
+    transmission: "Manual / 4WD",
+    fuel: "Diesel (15 km/l)",
+    rating: 4.92,
+    reviews: 328,
+    locations: ["manali", "leh", "spiti", "rishikesh", "jaipur"],
+    recommended_for: ["manali", "leh", "spiti", "rishikesh"],
+    terrain_tag: "High Altitude Passes & Rocky Riverbeds",
+    features: ["4WD Low-Range", "All-Terrain Offroad Tyres", "GPS Offline Unit", "Zero Security Deposit", "Roof Carrier Ready"]
+  },
+  {
+    id: "VH-102",
+    name: "Royal Enfield Himalayan 450",
+    type: "bike",
+    category_label: "Adventure Motorcycle",
+    image: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=800&auto=format&fit=crop",
+    price_per_day: 1400,
+    seats: 2,
+    transmission: "6-Speed Manual",
+    fuel: "Petrol (30 km/l)",
+    rating: 4.95,
+    reviews: 512,
+    locations: ["manali", "leh", "spiti", "rishikesh", "goa"],
+    recommended_for: ["leh", "manali", "spiti", "rishikesh"],
+    terrain_tag: "High Mountain Passes & Hairpin Bends",
+    features: ["Dual-Channel Switchable ABS", "Pannier Mounts", "TFT Tripper Navigation", "2 ISI Helmets Included", "24/7 Roadside Assistance"]
+  },
+  {
+    id: "VH-103",
+    name: "Honda Activa 6G / Ather 450X",
+    type: "scooter",
+    category_label: "City & Coastal Scooter",
+    image: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=800&auto=format&fit=crop",
+    price_per_day: 550,
+    seats: 2,
+    transmission: "Automatic (CVT)",
+    fuel: "Petrol / Electric (55 km/l)",
+    rating: 4.86,
+    reviews: 840,
+    locations: ["goa", "pondicherry", "varanasi", "kochi", "rishikesh", "jaipur"],
+    recommended_for: ["goa", "pondicherry", "varanasi", "kochi"],
+    terrain_tag: "Beach Corridors & Heritage Old City Streets",
+    features: ["Easy Parking", "Front Basket & Storage", "Helmets Included", "Instant Fuel Fill", "Unlimited Kilometres"]
+  },
+  {
+    id: "VH-104",
+    name: "Toyota Innova Crysta / Hycross",
+    type: "van_mpv",
+    category_label: "Luxury 7-Seater MPV",
+    image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800&auto=format&fit=crop",
+    price_per_day: 3800,
+    seats: 7,
+    transmission: "Automatic",
+    fuel: "Diesel / Hybrid (16 km/l)",
+    rating: 4.94,
+    reviews: 460,
+    locations: ["jaipur", "udaipur", "munnar", "kochi", "bangalore", "varanasi", "manali"],
+    recommended_for: ["jaipur", "udaipur", "munnar", "kochi", "bangalore"],
+    terrain_tag: "Long Highway Expressways & Family Hill Circuits",
+    features: ["Captain Reclining Seats", "Dual Zone Rear AC", "Massive Boot Space", "Chauffeur / Self-Drive", "Pre-Loaded FASTag"]
+  },
+  {
+    id: "VH-105",
+    name: "Maruti Suzuki Swift / Dzire ZXi",
+    type: "sedan",
+    category_label: "Economy Sedan & Hatchback",
+    image: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=800&auto=format&fit=crop",
+    price_per_day: 1350,
+    seats: 5,
+    transmission: "Manual / AMT",
+    fuel: "Petrol (22.5 km/l)",
+    rating: 4.82,
+    reviews: 620,
+    locations: ["jaipur", "varanasi", "bangalore", "goa", "kochi", "rishikesh"],
+    recommended_for: ["jaipur", "varanasi", "bangalore"],
+    terrain_tag: "Budget Monument Sightseeing & Smooth City Roads",
+    features: ["Best Mileage In Class", "Touchscreen Android Auto / Apple CarPlay", "Reverse Sensor & Camera", "AC Climate Control", "Sanitized & Disinfected"]
+  },
+  {
+    id: "VH-106",
+    name: "Tata Nexon EV Max (Long Range)",
+    type: "ev",
+    category_label: "Eco-Friendly Electric SUV",
+    image: "https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=800&auto=format&fit=crop",
+    price_per_day: 2200,
+    seats: 5,
+    transmission: "Automatic Single Speed",
+    fuel: "Electric (453 km Range)",
+    rating: 4.89,
+    reviews: 195,
+    locations: ["bangalore", "kochi", "munnar", "goa", "jaipur"],
+    recommended_for: ["bangalore", "kochi", "munnar"],
+    terrain_tag: "Zero-Emission Ecotourism & Hill Sanctuary Corridors",
+    features: ["Zero Emission Green Permit", "Complimentary Fast Charging Pass", "Multi-Mode Regen", "Ventilated Leather Seats", "Harman Acoustic Sound"]
+  },
+  {
+    id: "VH-107",
+    name: "Force Urbania 12-Seater Super Luxury Van",
+    type: "van_mpv",
+    category_label: "Group Executive Van",
+    image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=800&auto=format&fit=crop",
+    price_per_day: 7800,
+    seats: 12,
+    transmission: "Manual with ABS & ESP",
+    fuel: "Diesel (12 km/l)",
+    rating: 4.96,
+    reviews: 140,
+    locations: ["manali", "leh", "jaipur", "varanasi", "kochi", "bangalore", "rishikesh"],
+    recommended_for: ["manali", "leh", "jaipur", "rishikesh"],
+    terrain_tag: "Large Group Expeditions & Pilgrimage Circuits",
+    features: ["Individual Reclining Captain Seats", "Panoramic Tinted Sightseeing Windows", "Personal USB Fast Charging & Lamp", "High Standing Roof", "Verified Mountain Chauffeur"]
+  },
+  {
+    id: "VH-108",
+    name: "Toyota Fortuner 4x4 Legender",
+    type: "suv_4x4",
+    category_label: "VIP Heavy-Duty 4WD SUV",
+    image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=800&auto=format&fit=crop",
+    price_per_day: 6900,
+    seats: 7,
+    transmission: "6-Speed Automatic 4WD",
+    fuel: "Diesel (14 km/l)",
+    rating: 4.97,
+    reviews: 280,
+    locations: ["manali", "leh", "spiti", "jaipur", "udaipur", "bangalore"],
+    recommended_for: ["leh", "spiti", "jaipur", "udaipur"],
+    terrain_tag: "Extreme Terrain & Royal VIP Escort",
+    features: ["Dual Range 4WD High/Low", "Downhill Assist Control", "Premium Leather Cockpit", "JBL 11-Speaker Audio", "Unlimited State Radius"]
+  }
+];
+
+const LOCATION_TERRAIN_GUIDES = {
+  manali: {
+    title: "🏔️ Manali & Rohtang Pass Terrain Advice",
+    recommendation: "High-Altitude Passes, Steep Inclines & Riverbed Crossings",
+    bestVehicle: "4x4 Mountain SUVs (Mahindra Thar, Fortuner) & Royal Enfield Adventure Bikes",
+    tip: "Rohtang & Atal Tunnel routes have sudden icy patches and steep gradients. 4WD vehicles and high-ground clearance bikes ensure zero breakdown risks."
+  },
+  leh: {
+    title: "🏔️ Leh-Ladakh & Pangong Tso Terrain Advice",
+    recommendation: "Khardung La (17,982 ft) High Passes & Rocky Deserts",
+    bestVehicle: "4x4 SUVs & 450cc Adventure Motorcycles",
+    tip: "Pangong and Nubra Valley require robust low-range 4WD or specialized adventure bikes with dual-channel ABS and high fuel capacity."
+  },
+  spiti: {
+    title: "🏔️ Spiti Valley & Kaza Offroad Advice",
+    recommendation: "Unpaved Rugged Tracks & Water Crossings",
+    bestVehicle: "Mahindra Thar 4x4 or Toyota Fortuner 4x4",
+    tip: "Spiti roads feature loose stones and shallow stream crossings (nullahs). Low-range 4x4 transfer case is strongly advised."
+  },
+  goa: {
+    title: "🏖️ Goa Beach Circuit & Coastal Cruising",
+    recommendation: "Narrow Village Roads, Beach Hops & Sunset Drives",
+    bestVehicle: "Scooters (Activa/Ather EV) & Compact Hatchbacks",
+    tip: "Scooters provide effortless beach-to-beach hopping, free parking near shacks, and agility through palm-lined lanes."
+  },
+  jaipur: {
+    title: "🏰 Jaipur & Rajasthan Royal Expressway Advice",
+    recommendation: "Smooth 6-Lane Desert Highways & Palace Circuits",
+    bestVehicle: "Toyota Innova Crysta, Fortuner or Luxury Sedans",
+    tip: "Intercity drives between Jaipur, Jodhpur, and Udaipur are seamless. Climate-controlled high-speed MPVs and sedans offer top comfort."
+  },
+  munnar: {
+    title: "🌿 Munnar & Western Ghats Hill Roads",
+    recommendation: "Misty Hairpin Bends & Rolling Tea Trails",
+    bestVehicle: "Tata Nexon EV, Innova Crysta or AWD SUVs",
+    tip: "Eco-sensitive hill station roads favor clean electric power and high-traction vehicles with hill-hold assist."
+  },
+  varanasi: {
+    title: "🪔 Varanasi Ghats & Heritage Hubs",
+    recommendation: "Old City Alleys & Sarnath Express Highway",
+    bestVehicle: "City Scooters (for Ghats) & Swift Sedan (for Sarnath / Airport)",
+    tip: "Use lightweight 2-wheelers for Old Varanasi ghat lanes, and comfortable AC sedans for long airport / highway transfers."
+  },
+  rishikesh: {
+    title: "🌊 Rishikesh & Haridwar Valley Trails",
+    recommendation: "Ganges River Valleys, Camping Trails & Hill Temples",
+    bestVehicle: "Royal Enfield Himalayan or Mahindra Thar 4x4",
+    tip: "Great for scenic riverside rides to Devprayag and Neelkanth temple roads."
+  },
+  bangalore: {
+    title: "🌳 Bangalore & Coorg Coffee Plantation Trails",
+    recommendation: "City Expressways & Western Ghats Plantation Tracks",
+    bestVehicle: "Electric SUVs (Nexon EV) & Luxury MPVs",
+    tip: "Abundant EV fast-charging stations across Karnataka highways make electric and hybrid travel exceptionally cost-effective."
+  }
+};
 
 export default function BookingsPage() {
   const [activeTab, setActiveTab] = useState('all');
@@ -13,7 +210,20 @@ export default function BookingsPage() {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [downloadedId, setDownloadedId] = useState(null);
 
-  const [mainSection, setMainSection] = useState('passes'); // 'passes', 'match', 'upcoming', or 'sharing'
+  const [mainSection, setMainSection] = useState('passes'); // 'passes', 'vehicles', 'match', 'upcoming', or 'sharing'
+
+  // Vehicle Rental States
+  const [vehicleLocation, setVehicleLocation] = useState('all');
+  const [vehicleType, setVehicleType] = useState('all');
+  const [vehicleBudget, setVehicleBudget] = useState('all'); // 'all', 'budget', 'moderate', 'premium', 'luxury'
+  const [vehiclesList, setVehiclesList] = useState(DEFAULT_VEHICLES);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [vehicleBookingSuccess, setVehicleBookingSuccess] = useState(false);
+  const [vehiclePickupDate, setVehiclePickupDate] = useState('2026-10-15');
+  const [vehicleReturnDate, setVehicleReturnDate] = useState('2026-10-18');
+  const [vehiclePickupPoint, setVehiclePickupPoint] = useState('Airport Pickup Terminal');
+  const [vehicleDriverMode, setVehicleDriverMode] = useState('self_drive'); // 'self_drive' or 'with_chauffeur'
+  const [vehicleBookingRef, setVehicleBookingRef] = useState(null);
 
   // Match My Trip States
   const [matchDestination, setMatchDestination] = useState('');
@@ -33,6 +243,56 @@ export default function BookingsPage() {
   const [isFetchingUpcoming, setIsFetchingUpcoming] = useState(false);
   const [selectedAgencyTrip, setSelectedAgencyTrip] = useState(null);
   const [bookingSuccess, setBookingSuccess] = useState(false);
+
+  // Filter Vehicles dynamically based on Location, Type, and Budget
+  useEffect(() => {
+    let list = [...DEFAULT_VEHICLES];
+
+    // 1. Location filter
+    if (vehicleLocation && vehicleLocation !== 'all') {
+      list = list.filter(v => v.locations.includes(vehicleLocation.toLowerCase()));
+    }
+
+    // 2. Type filter
+    if (vehicleType && vehicleType !== 'all') {
+      list = list.filter(v => v.type === vehicleType);
+    }
+
+    // 3. Budget filter
+    if (vehicleBudget === 'budget') {
+      list = list.filter(v => v.price_per_day <= 1500);
+    } else if (vehicleBudget === 'moderate') {
+      list = list.filter(v => v.price_per_day > 1500 && v.price_per_day <= 3500);
+    } else if (vehicleBudget === 'premium') {
+      list = list.filter(v => v.price_per_day > 3500 && v.price_per_day <= 7000);
+    } else if (vehicleBudget === 'luxury') {
+      list = list.filter(v => v.price_per_day > 7000);
+    }
+
+    // 4. Mark location recommendations and prioritize them at top
+    list = list.map(v => ({
+      ...v,
+      is_recommended_for_location: Boolean(vehicleLocation !== 'all' && v.recommended_for.includes(vehicleLocation.toLowerCase()))
+    }));
+
+    list.sort((a, b) => {
+      if (a.is_recommended_for_location && !b.is_recommended_for_location) return -1;
+      if (!a.is_recommended_for_location && b.is_recommended_for_location) return 1;
+      return a.price_per_day - b.price_per_day;
+    });
+
+    setVehiclesList(list);
+  }, [vehicleLocation, vehicleType, vehicleBudget]);
+
+  const handleBookVehicle = (v) => {
+    setSelectedVehicle(v);
+    setVehicleBookingSuccess(false);
+    setVehicleBookingRef(`BY-VH-${Math.floor(100000 + Math.random() * 900000)}`);
+  };
+
+  const handleConfirmVehicleBooking = () => {
+    setVehicleBookingSuccess(true);
+  };
 
   // Fetch upcoming trips helper
   const fetchUpcomingTrips = async () => {
@@ -350,7 +610,7 @@ export default function BookingsPage() {
         </motion.div>
 
         {/* Main Section Navigation Switcher */}
-        <div className="flex bg-stone-200/80 p-1.5 rounded-2xl max-w-2xl mx-auto mb-10 shadow-inner overflow-x-auto gap-1">
+        <div className="flex bg-stone-200/80 p-1.5 rounded-2xl max-w-4xl mx-auto mb-10 shadow-inner overflow-x-auto gap-1">
           <button
             onClick={() => setMainSection('passes')}
             className={`flex-1 py-3 px-4 text-xs font-black uppercase tracking-wider transition-all rounded-xl cursor-pointer text-center whitespace-nowrap ${
@@ -360,6 +620,16 @@ export default function BookingsPage() {
             }`}
           >
             🎟 E-Passes & Guides
+          </button>
+          <button
+            onClick={() => setMainSection('vehicles')}
+            className={`flex-1 py-3 px-4 text-xs font-black uppercase tracking-wider transition-all rounded-xl cursor-pointer text-center whitespace-nowrap ${
+              mainSection === 'vehicles' 
+                ? 'text-forest-900 bg-white shadow font-black' 
+                : 'text-stone-600 hover:text-stone-900'
+            }`}
+          >
+            🚗 Rent Vehicles
           </button>
           <button
             onClick={() => setMainSection('match')}
@@ -600,6 +870,284 @@ export default function BookingsPage() {
         )}
 
         <AnimatePresence mode="wait">
+          {mainSection === 'vehicles' && (
+            <motion.div
+              key="vehicles-section"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="space-y-8 max-w-7xl mx-auto"
+            >
+              {/* Trust & Guarantee Banner */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-5xl mx-auto">
+                {[
+                  { label: "Tourist Fleet", value: "Govt. Verified", icon: ShieldCheck, color: "text-emerald-600" },
+                  { label: "Deposit Policy", value: "Zero Deposit", icon: Key, color: "text-saffron" },
+                  { label: "Navigation Support", value: "Offline GPS Included", icon: Navigation, color: "text-blue-500" },
+                  { label: "Insurance", value: "Full Cover Included", icon: Award, color: "text-forest-900" }
+                ].map((stat, idx) => (
+                  <motion.div 
+                    key={idx}
+                    whileHover={{ y: -3, scale: 1.02 }}
+                    className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-stone-200 shadow-sm flex items-center gap-3.5"
+                  >
+                    <div className={`p-2.5 rounded-xl bg-stone-100 ${stat.color}`}>
+                      <stat.icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-stone-500">{stat.label}</div>
+                      <div className="font-serif font-black text-stone-900 text-sm sm:text-base">{stat.value}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Dynamic Filter Controls Panel */}
+              <div className="bg-white/90 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-stone-200 shadow-xl space-y-6">
+                
+                {/* Row 1: Location & Budget Pickers */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  
+                  {/* Location Selector */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-black text-stone-800 uppercase tracking-wider flex items-center gap-1.5">
+                      <MapPin className="w-4 h-4 text-saffron" />
+                      <span>1. Select Destination & Terrain Hub</span>
+                    </label>
+                    <select
+                      value={vehicleLocation}
+                      onChange={(e) => setVehicleLocation(e.target.value)}
+                      className="w-full bg-stone-50 border border-stone-300 rounded-2xl px-4 py-3 text-sm font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-saffron/50 transition-all cursor-pointer"
+                    >
+                      <option value="all">🗺️ All India Rental Hubs (Pan-India)</option>
+                      <option value="manali">🏔️ Manali & Rohtang Pass (Himachal Pradesh)</option>
+                      <option value="leh">🏔️ Leh Ladakh & Pangong Tso (High Altitude)</option>
+                      <option value="spiti">🏔️ Spiti Valley & Kaza (Offroad Rocky Circuit)</option>
+                      <option value="goa">🏖️ Goa Beach Circuits & Coastal Highway</option>
+                      <option value="jaipur">🏰 Jaipur & Rajasthan Royal Expressways</option>
+                      <option value="munnar">🌿 Munnar & Western Ghats Hill Roads</option>
+                      <option value="varanasi">🪔 Varanasi Ghats & Heritage Highways</option>
+                      <option value="rishikesh">🌊 Rishikesh & Haridwar Valley Trails</option>
+                      <option value="bangalore">🌳 Bangalore & Coorg Coffee Corridors</option>
+                    </select>
+                  </div>
+
+                  {/* Budget Selector */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-black text-stone-800 uppercase tracking-wider flex items-center gap-1.5">
+                      <IndianRupee className="w-4 h-4 text-emerald-600" />
+                      <span>2. Daily Budget Range</span>
+                    </label>
+                    <select
+                      value={vehicleBudget}
+                      onChange={(e) => setVehicleBudget(e.target.value)}
+                      className="w-full bg-stone-50 border border-stone-300 rounded-2xl px-4 py-3 text-sm font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-saffron/50 transition-all cursor-pointer"
+                    >
+                      <option value="all">💰 All Budgets (Any Price)</option>
+                      <option value="budget">🟢 Budget Friendly (Under ₹1,500 / day)</option>
+                      <option value="moderate">🟡 Mid-Range Comfort (₹1,500 – ₹3,500 / day)</option>
+                      <option value="premium">🟠 Premium & 4x4 Mountain SUVs (₹3,500 – ₹7,000 / day)</option>
+                      <option value="luxury">🟣 VIP & Large Group Vans (₹7,000+ / day)</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Row 2: Vehicle Type Category Filter Pills */}
+                <div className="space-y-2.5 pt-2 border-t border-stone-150">
+                  <label className="text-xs font-black text-stone-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <Car className="w-4 h-4 text-forest-900" />
+                    <span>3. Vehicle Category</span>
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { id: 'all', label: 'All Fleet', icon: SlidersHorizontal },
+                      { id: 'suv_4x4', label: '🚙 4x4 Mountain SUVs', icon: Car },
+                      { id: 'bike', label: '🏍️ Adventure Bikes', icon: Bike },
+                      { id: 'scooter', label: '🛵 Coastal Scooters', icon: Bike },
+                      { id: 'sedan', label: '🚗 Sedans & Hatchbacks', icon: Car },
+                      { id: 'van_mpv', label: '🚐 Luxury MPVs & Vans', icon: Truck },
+                      { id: 'ev', label: '⚡ Eco Electric EVs', icon: Zap }
+                    ].map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => setVehicleType(item.id)}
+                        className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                          vehicleType === item.id 
+                            ? 'bg-forest-900 text-white shadow-md shadow-forest-900/20 scale-105' 
+                            : 'bg-stone-100 hover:bg-stone-200 text-stone-700'
+                        }`}
+                      >
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Dynamic Location Terrain Advisory Tip */}
+              {vehicleLocation !== 'all' && LOCATION_TERRAIN_GUIDES[vehicleLocation] && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-5 rounded-3xl bg-gradient-to-r from-amber-500/15 via-saffron/10 to-emerald-500/10 border border-saffron/30 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-saffron" />
+                      <h4 className="font-serif font-black text-stone-900 text-sm sm:text-base">
+                        {LOCATION_TERRAIN_GUIDES[vehicleLocation].title}
+                      </h4>
+                    </div>
+                    <p className="text-xs text-stone-700 font-medium leading-relaxed">
+                      <strong>Terrain:</strong> {LOCATION_TERRAIN_GUIDES[vehicleLocation].recommendation}
+                    </p>
+                    <p className="text-xs text-stone-600 font-normal">
+                      💡 <em>{LOCATION_TERRAIN_GUIDES[vehicleLocation].tip}</em>
+                    </p>
+                  </div>
+                  <div className="shrink-0 bg-white px-4 py-2 rounded-2xl border border-saffron/40 shadow-sm text-center">
+                    <span className="text-[9px] font-black uppercase text-saffron tracking-wider block">Best Match</span>
+                    <span className="text-xs font-black text-forest-900">{LOCATION_TERRAIN_GUIDES[vehicleLocation].bestVehicle.split('&')[0]}</span>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Results Header Count */}
+              <div className="flex items-center justify-between px-2">
+                <span className="text-xs font-black text-stone-600 uppercase tracking-widest">
+                  Showing {vehiclesList.length} Verified Vehicles
+                </span>
+                {(vehicleLocation !== 'all' || vehicleType !== 'all' || vehicleBudget !== 'all') && (
+                  <button 
+                    onClick={() => { setVehicleLocation('all'); setVehicleType('all'); setVehicleBudget('all'); }}
+                    className="text-xs text-saffron hover:text-amber-700 font-bold flex items-center gap-1 cursor-pointer"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>Reset All Filters</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Vehicles Cards Grid */}
+              {vehiclesList.length === 0 ? (
+                <div className="bg-white rounded-3xl p-12 text-center border border-stone-200 max-w-lg mx-auto space-y-3">
+                  <Car className="w-12 h-12 text-stone-300 mx-auto" />
+                  <h4 className="font-serif font-bold text-stone-800 text-lg">No vehicles matched this filter</h4>
+                  <p className="text-xs text-stone-500">Try widening your daily budget or choosing 'All Fleet'.</p>
+                  <button 
+                    onClick={() => { setVehicleLocation('all'); setVehicleType('all'); setVehicleBudget('all'); }}
+                    className="px-5 py-2.5 bg-forest-900 text-white rounded-2xl text-xs font-bold cursor-pointer"
+                  >
+                    View All Vehicles
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {vehiclesList.map((v) => (
+                    <motion.div
+                      key={v.id}
+                      whileHover={{ y: -6, scale: 1.02 }}
+                      className={`bg-white rounded-3xl overflow-hidden border shadow-lg flex flex-col justify-between transition-all duration-300 ${
+                        v.is_recommended_for_location 
+                          ? 'border-saffron/60 ring-2 ring-saffron/20' 
+                          : 'border-stone-200 hover:border-stone-300'
+                      }`}
+                    >
+                      {/* Vehicle Image with Badges */}
+                      <div className="relative h-52 w-full overflow-hidden bg-stone-900">
+                        <img 
+                          src={v.image} 
+                          alt={v.name} 
+                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-transparent to-black/20" />
+                        
+                        {/* Top Location Recommendation Badge */}
+                        {v.is_recommended_for_location && (
+                          <div className="absolute top-3 left-3 bg-gradient-to-r from-saffron to-amber-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            <span>Top Pick for this Terrain</span>
+                          </div>
+                        )}
+
+                        {/* Category Label Badge */}
+                        <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-md text-stone-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm">
+                          {v.category_label}
+                        </div>
+
+                        {/* Rating Badge */}
+                        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-amber-400 px-2.5 py-1 rounded-full text-xs font-black flex items-center gap-1">
+                          <Star className="w-3.5 h-3.5 fill-amber-400" />
+                          <span>{v.rating} ({v.reviews})</span>
+                        </div>
+                      </div>
+
+                      {/* Card Body Specs */}
+                      <div className="p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div className="space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <h3 className="font-serif text-lg font-black text-stone-900 leading-snug">
+                              {v.name}
+                            </h3>
+                          </div>
+                          <span className="inline-block text-[11px] text-saffron font-extrabold uppercase tracking-wide">
+                            🏔️ {v.terrain_tag}
+                          </span>
+                        </div>
+
+                        {/* Specifications Grid */}
+                        <div className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-stone-50 border border-stone-200 text-center text-xs">
+                          <div>
+                            <span className="text-[9px] text-stone-400 font-bold uppercase block">Capacity</span>
+                            <span className="font-black text-stone-800">{v.seats} Seats</span>
+                          </div>
+                          <div className="border-x border-stone-200">
+                            <span className="text-[9px] text-stone-400 font-bold uppercase block">Gearbox</span>
+                            <span className="font-black text-stone-800 truncate block px-1">{v.transmission.split('/')[0]}</span>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-stone-400 font-bold uppercase block">Economy</span>
+                            <span className="font-black text-stone-800 truncate block">{v.fuel.split('(')[0]}</span>
+                          </div>
+                        </div>
+
+                        {/* Features List */}
+                        <div className="space-y-1.5 pt-1">
+                          {v.features.slice(0, 3).map((f, i) => (
+                            <div key={i} className="flex items-center gap-1.5 text-xs text-stone-600 font-medium">
+                              <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 font-black" />
+                              <span>{f}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Price and Book CTA */}
+                        <div className="pt-4 border-t border-stone-150 flex items-center justify-between">
+                          <div>
+                            <span className="text-[9px] text-stone-400 font-bold uppercase block leading-none">Daily Tariff</span>
+                            <div className="flex items-baseline">
+                              <span className="font-serif text-2xl font-black text-forest-900">₹{v.price_per_day.toLocaleString('en-IN')}</span>
+                              <span className="text-xs text-stone-500 font-bold ml-1">/ day</span>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => handleBookVehicle(v)}
+                            className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-saffron to-amber-600 hover:from-amber-600 hover:to-saffron text-white font-extrabold text-xs shadow-md shadow-saffron/20 transition-all cursor-pointer hover:scale-105"
+                          >
+                            Reserve Now
+                          </button>
+                        </div>
+
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+
+            </motion.div>
+          )}
+
           {mainSection === 'match' && (
             <motion.div
                   key="match-section"
@@ -1412,6 +1960,186 @@ export default function BookingsPage() {
                       Book Now
                     </button>
                   </div>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Vehicle Rental Reservation Modal */}
+      <AnimatePresence>
+        {selectedVehicle && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => { setSelectedVehicle(null); setVehicleBookingSuccess(false); }}
+              className="absolute inset-0 bg-stone-950/70 backdrop-blur-sm"
+            />
+
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="relative bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-stone-200 z-10 overflow-hidden"
+            >
+              {/* Top Wave */}
+              <div className="absolute top-0 inset-x-0 h-3 bg-gradient-to-r from-saffron via-amber-500 to-emerald-500" />
+
+              <button 
+                onClick={() => { setSelectedVehicle(null); setVehicleBookingSuccess(false); }}
+                className="absolute top-4 right-4 p-2 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              {vehicleBookingSuccess ? (
+                <div className="text-center py-6 space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto text-emerald-600">
+                    <CheckCircle2 className="w-10 h-10" />
+                  </div>
+                  <h3 className="font-serif text-2xl font-black text-stone-900">
+                    Vehicle Reserved Successfully!
+                  </h3>
+                  <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200 text-left space-y-2 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Booking Pass ID:</span>
+                      <span className="font-mono font-black text-stone-900">{vehicleBookingRef}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Vehicle:</span>
+                      <span className="font-bold text-stone-900">{selectedVehicle.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Pickup Date:</span>
+                      <span className="font-bold text-stone-900">{vehiclePickupDate}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Return Date:</span>
+                      <span className="font-bold text-stone-900">{vehicleReturnDate}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Driver Mode:</span>
+                      <span className="font-bold text-stone-900 capitalize">{vehicleDriverMode.replace('_', ' ')}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Pickup Location:</span>
+                      <span className="font-bold text-stone-900">{vehiclePickupPoint}</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-emerald-600 font-bold">
+                    ✓ Zero security deposit verified. FastTag and road tax pre-cleared.
+                  </p>
+                  <button
+                    onClick={() => { setSelectedVehicle(null); setVehicleBookingSuccess(false); }}
+                    className="w-full py-3.5 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white font-extrabold text-xs transition-colors cursor-pointer"
+                  >
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1 text-[9px] font-black text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Govt. Verified Commercial Permit</span>
+                      </span>
+                    </div>
+                    <h3 className="font-serif text-xl sm:text-2xl font-black text-stone-900 leading-tight">
+                      {selectedVehicle.name}
+                    </h3>
+                    <p className="text-xs text-saffron font-bold">
+                      🏔️ {selectedVehicle.terrain_tag}
+                    </p>
+                  </div>
+
+                  {/* Date & Location Pickers */}
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-stone-500 uppercase">Pickup Date</label>
+                      <input 
+                        type="date"
+                        value={vehiclePickupDate}
+                        onChange={(e) => setVehiclePickupDate(e.target.value)}
+                        className="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold text-stone-800"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-stone-500 uppercase">Return Date</label>
+                      <input 
+                        type="date"
+                        value={vehicleReturnDate}
+                        onChange={(e) => setVehicleReturnDate(e.target.value)}
+                        className="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold text-stone-800"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Pickup Point */}
+                  <div className="space-y-1 text-xs">
+                    <label className="text-[10px] font-bold text-stone-500 uppercase">Pickup Hub Point</label>
+                    <select
+                      value={vehiclePickupPoint}
+                      onChange={(e) => setVehiclePickupPoint(e.target.value)}
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold text-stone-800"
+                    >
+                      <option value="Airport Pickup Terminal">✈️ Airport Pickup Terminal (Meet & Greet)</option>
+                      <option value="Railway Station Hub">🚆 Main Railway Station Parking</option>
+                      <option value="Hotel / Resort Doorstep Delivery">🏨 Hotel / Homestay Doorstep Delivery</option>
+                      <option value="City Rental Center">🏢 City Center Rental Garage</option>
+                    </select>
+                  </div>
+
+                  {/* Driver Mode Selector */}
+                  <div className="space-y-1 text-xs">
+                    <label className="text-[10px] font-bold text-stone-500 uppercase">Driving Preference</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setVehicleDriverMode('self_drive')}
+                        className={`p-2.5 rounded-xl border text-xs font-bold text-center cursor-pointer transition-all ${
+                          vehicleDriverMode === 'self_drive'
+                            ? 'border-forest-900 bg-forest-900 text-white shadow-sm'
+                            : 'border-stone-200 bg-stone-50 text-stone-700 hover:bg-stone-100'
+                        }`}
+                      >
+                        🚗 Self Drive
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setVehicleDriverMode('with_chauffeur')}
+                        className={`p-2.5 rounded-xl border text-xs font-bold text-center cursor-pointer transition-all ${
+                          vehicleDriverMode === 'with_chauffeur'
+                            ? 'border-forest-900 bg-forest-900 text-white shadow-sm'
+                            : 'border-stone-200 bg-stone-50 text-stone-700 hover:bg-stone-100'
+                        }`}
+                      >
+                        🧑‍✈️ With Local Driver (+₹600/d)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Price & Action */}
+                  <div className="pt-4 border-t border-stone-150 flex items-center justify-between">
+                    <div>
+                      <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block leading-none">Daily Rental Rate</span>
+                      <span className="font-serif text-2xl font-black text-forest-900">
+                        ₹{(selectedVehicle.price_per_day + (vehicleDriverMode === 'with_chauffeur' ? 600 : 0)).toLocaleString('en-IN')}
+                        <span className="text-xs text-stone-500 font-normal"> / day</span>
+                      </span>
+                    </div>
+                    <button
+                      onClick={handleConfirmVehicleBooking}
+                      className="px-6 py-3 rounded-2xl bg-gradient-to-r from-saffron to-amber-600 hover:from-amber-600 hover:to-saffron text-white font-extrabold text-xs transition-colors cursor-pointer shadow-md shadow-saffron/20"
+                    >
+                      Confirm Reservation
+                    </button>
+                  </div>
+
                 </div>
               )}
             </motion.div>
