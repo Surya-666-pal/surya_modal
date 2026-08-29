@@ -17,6 +17,9 @@ const PRESET_AVATARS = [
   { id: '6', name: 'Trail Guide', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=400&auto=format&fit=crop' },
 ];
 
+const TOTAL_FRAMES = 120;
+const getFramePath = (idx) => `/profile_frames/frame_${String(idx).padStart(3, '0')}.jpg`;
+
 export default function ProfilePage() {
   const [profilePhoto, setProfilePhoto] = useState(() => {
     return localStorage.getItem('bharat_yatra_profile_photo') || DEFAULT_AVATAR;
@@ -33,6 +36,80 @@ export default function ProfilePage() {
   const [toastMessage, setToastMessage] = useState('');
 
   const fileInputRef = useRef(null);
+  const canvasRef = useRef(null);
+  const imagesRef = useRef([]);
+  const [currentFrame, setCurrentFrame] = useState(0);
+
+  // Preload all extracted frames from gemini_generated_video_a33803a7
+  useEffect(() => {
+    const loadedImgs = [];
+    for (let i = 0; i < TOTAL_FRAMES; i++) {
+      const img = new window.Image();
+      img.src = getFramePath(i);
+      img.onload = () => {
+        if (i === 0) {
+          renderCanvasFrame(0);
+        }
+      };
+      loadedImgs.push(img);
+    }
+    imagesRef.current = loadedImgs;
+  }, []);
+
+  const renderCanvasFrame = (index) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const img = imagesRef.current[index];
+    if (!img || !img.complete) return;
+
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    // Object-cover aspect fit
+    const hRatio = w / img.width;
+    const vRatio = h / img.height;
+    const ratio = Math.max(hRatio, vRatio);
+    const centerShiftX = (w - img.width * ratio) / 2;
+    const centerShiftY = (h - img.height * ratio) / 2;
+
+    ctx.drawImage(
+      img, 
+      0, 0, img.width, img.height,
+      centerShiftX, centerShiftY, img.width * ratio, img.height * ratio
+    );
+  };
+
+  // Listen to scroll to update frame index
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, scrollY / maxScroll));
+      const frameIdx = Math.min(TOTAL_FRAMES - 1, Math.floor(progress * TOTAL_FRAMES));
+      
+      setCurrentFrame(frameIdx);
+      renderCanvasFrame(frameIdx);
+    };
+
+    const handleResize = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      renderCanvasFrame(currentFrame);
+    };
+
+    handleResize();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [currentFrame]);
 
   // 3D Parallax Tilt States
   const [coords, setCoords] = useState({ x: 0.5, y: 0.5, rotateX: 0, rotateY: 0 });
@@ -100,7 +177,7 @@ export default function ProfilePage() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.08
       }
     }
   };
@@ -123,15 +200,15 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div className="pt-24 pb-20 min-h-screen relative overflow-hidden font-sans bg-slate-900">
-      {/* Scenic Alpine Mountain Background */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <img 
-          src="/profile_liquid_bg.jpg" 
-          alt="Scenic Mountain Lake" 
-          className="w-full h-full object-cover object-center filter brightness-[0.9] saturate-[1.05]"
+    <div className="pt-24 pb-20 min-h-screen relative overflow-hidden font-sans bg-slate-950">
+      {/* Scroll-Scrubbed Video Frames Background */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-stone-950">
+        <canvas 
+          ref={canvasRef} 
+          className="w-full h-full object-cover object-center filter brightness-[0.92] contrast-[1.05]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-900/30 via-transparent to-slate-950/80" />
+        {/* Soft Vignette Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-950/40 via-transparent to-slate-950/80 pointer-events-none" />
       </div>
 
       {/* Hidden File Input for Direct Local Image Upload */}
