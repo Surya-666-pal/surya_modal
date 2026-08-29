@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Compass, Sparkles, ChevronDown, ShieldCheck, MapPin } from 'lucide-react';
+import { ArrowRight, Compass, Sparkles, ChevronDown, ShieldCheck } from 'lucide-react';
 import heroVideoSrc from '../assets/hero-video.mp4';
 import travelBadgeImg from '../assets/travel-badge.jpg';
 
@@ -182,10 +182,6 @@ export default function Hero({ onOpenPlanner, onExploreGems }) {
               <div className="flex items-center gap-1.5 bg-black/40 hover:bg-black/50 px-3.5 py-1.5 rounded-full border border-white/20 backdrop-blur-md transition-colors">
                 <span className="w-2 h-2 rounded-full bg-saffron animate-ping" />
                 <span className="font-medium">ISL Sign Language Ready</span>
-              </div>
-              <div className="flex items-center gap-1.5 bg-black/40 hover:bg-black/50 px-3.5 py-1.5 rounded-full border border-white/20 backdrop-blur-md transition-colors">
-                <MapPin className="w-4 h-4 text-cyan-400" />
-                <span className="font-medium">100% Offline Navigation</span>
               </div>
             </motion.div>
           </motion.div>
